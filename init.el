@@ -317,7 +317,7 @@
   (setq comment-tags-require-colon 0))
 
 (use-package ibuffer
-  :bind ("C-x B" . ibuffer))
+  :bind ("C-x C-b" . ibuffer))
 
 (use-package expand-region
   :straight t
