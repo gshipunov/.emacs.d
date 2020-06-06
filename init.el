@@ -79,6 +79,7 @@
 ;;That's what you pay with for org mode
 (add-hook 'prog-mode-hook 'tabs-yay)
 (add-hook 'lisp-mode-hook 'tabs-nay)
+(add-hook 'scheme-mode-hook 'tabs-nay)
 (add-hook 'emacs-lisp-mode-hook 'tabs-nay)
 
 ;; highlight the parens
@@ -174,7 +175,9 @@
 (use-package rainbow-delimiters
   :straight t
   :hook ((emacs-lisp-mode . rainbow-delimiters-mode)
-         (c-mode . rainbow-delimiters-mode)))
+         (lisp-mode . rainbow-delimiters-mode)
+         (scheme-mode . rainbow-delimiters-mode)
+         (cc-mode . rainbow-delimiters-mode)))
 
 (use-package org
   :straight org-plus-contrib
@@ -213,7 +216,15 @@
            "* [[%x][%?]\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n")))
   ;; autosave advices for agenda and org-capture
   (advice-add 'org-agenda-quit :before 'org-save-all-org-buffers)
-  (advice-add 'org-capture-finalize :after 'org-save-all-org-buffers))
+  (advice-add 'org-capture-finalize :after 'org-save-all-org-buffers)
+
+  ;; babel stuff
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((scheme . t)
+     (emacs-lisp .t)
+     (python . t)
+     (C . t))))
 
 (use-package org-tempo
   :after org)
@@ -327,6 +338,11 @@
   :straight t
   :init
   (setq vterm-kill-buffer-on-exit t))
+
+(use-package geiser
+  :straight t
+  :init
+  (setq geiser-active-implementations '(racket)))
 
 ;; throw away all the list-of-custom-shit!
 (setq custom-file "~/.emacs.d/custom.el")
