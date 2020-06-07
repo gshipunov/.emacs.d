@@ -109,7 +109,14 @@
 
 (load-theme 'leuven t)
 
-;; better M-x
+;; ido does most of what I need, and built in!
+(require 'ido)
+;; we want it everywhere and want fancy matching
+(setq ido-enable-flex-matching t
+      ido-everywhere t)
+(ido-mode 1)
+
+;; better M-x (ido based)
 (straight-use-package 'smex)
 (smex-initialize)
 (global-set-key (kbd "M-x") 'smex)
@@ -121,14 +128,12 @@
 (use-package calendar
   :init (setq calendar-week-start-day 1))
 
-;; CC mode
-(use-package cc-mode
-  :init
-  (setq c-default-style '((java-mode . "java")
-                          (awk-mode . "awk")
-                          (c-mode . "linux")
-                          (c++-mode . "stroustrup")
-                          (other . "linux"))))
+;; CC mode default styles
+(setq c-default-style '((java-mode . "java")
+                        (awk-mode . "awk")
+                        (c-mode . "linux")
+                        (c++-mode . "stroustrup")
+                        (other . "linux")))
 
 (use-package tex-site
   :defer t
@@ -192,10 +197,9 @@
    '((scheme . t)
      (emacs-lisp .t)
      (python . t)
-     (C . t))))
-
-(use-package org-tempo
-  :after org)
+     (C . t)))
+  :config
+  (require 'org-tempo))
 
 (use-package magit
   :straight t
@@ -245,12 +249,6 @@
   :straight t
   :init
   (setq geiser-active-implementations '(racket)))
-
-(use-package ido
-  :config
-  (setq ido-enable-flex-matching t
-        ido-everywhere t)
-  (ido-mode 1))
 
 ;; throw away all the list-of-custom-shit!
 (setq custom-file "~/.emacs.d/custom.el")
