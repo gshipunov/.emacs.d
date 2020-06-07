@@ -1,8 +1,11 @@
 auto-save-list
 backups
+bookmarks
+custom.el
+games
+ido.last
 irony
 projectile-bookmarks.eld
+smex-items
 straight
-custom.el
 transient
-games
