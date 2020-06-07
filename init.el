@@ -74,9 +74,8 @@
   (setq indent-tabs-mode t))
 (defun tabs-nay () (setq indent-tabs-mode nil))
 
-;;wasteland of hooks regarding tabs behaviour
-;;Remember how it "Just worked"™ in vim?
-;;That's what you pay with for org mode
+;; wasteland of hooks regarding tabs behavior Remember how it "Just
+;; worked"™ in vim? That's what you pay with for org mode
 (add-hook 'prog-mode-hook 'tabs-yay)
 (add-hook 'lisp-mode-hook 'tabs-nay)
 (add-hook 'scheme-mode-hook 'tabs-nay)
@@ -85,7 +84,6 @@
 ;; highlight the parens
 (setq show-paren-delay 0)
 (show-paren-mode 1)
-
 
 ;; follow symlinks to version-controlled files
 (setq vc-follow-symlinks t)
@@ -109,7 +107,15 @@
 (straight-use-package 'leuven-theme)
 (straight-use-package 'zenburn-theme)
 
-(load-theme 'gruvbox-dark-hard t)
+(load-theme 'leuven t)
+
+;; better M-x
+(straight-use-package 'smex)
+(smex-initialize)
+(global-set-key (kbd "M-x") 'smex)
+(global-set-key (kbd "M-X") 'smex-major-mode-commands)
+;; old M-x, just-in-case
+(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
 ;; healthy people weeks are starting on Monday
 (use-package calendar
@@ -129,33 +135,10 @@
   :mode ("\\.tex\\'" . latex-mode)
   :straight auctex
   :config
-  (setq TeX-parse-self t)
-(use-package company-auctex
-  :straight t
-  :config
-  (company-auctex-init)))
+  (setq TeX-parse-self t))
 
 (use-package latex-preview-pane
   :straight t)
-
-(use-package flycheck
-  :straight t
-  :config (global-flycheck-mode))
-
-(use-package ivy
-  :straight t
-  :demand
-  :bind (("\C-s" . swiper)
-         ("C-c C-r" . ivy-resume))
-  :init
-  (setq ivy-display-style 'fancy)
-  :config
-  (ivy-mode 1))
-
-(use-package counsel
-  :straight t
-  :config
-  (counsel-mode 1))
 
 (use-package rainbow-delimiters
   :straight t
@@ -219,33 +202,10 @@
   :bind (("C-x C-g" . magit-dispatch)
          ("C-x g" . magit-status)))
 
-(use-package gnuplot-mode
-  :straight t)
-
 (use-package undo-tree
   :straight t
   :config
   (global-undo-tree-mode 1))
-
-(use-package elpy
-  :straight t
-  :after flycheck
-  :hook
-  (elpy-mode . flycheck-mode)
-  :config
-  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
-  (elpy-enable))
-
-(use-package markdown-mode
-  :straight t
-  :mode (("README\\.md\\'" . gfm-mode)
-         ("\\.md\\'" . markdown-mode)
-         ("\\.markdown\\'" . markdown-mode))
-  :init (setq markdown-command "multimarkdown"))
-
-(use-package company
-  :straight t
-  :hook ('prog-mode . 'company-mode))
 
 ;; I positively cannot spell :D
 (use-package ispell
@@ -261,9 +221,6 @@
          ('change-log-mode . (lambda () (flyspell-mode -1)))
          ('log-edit-mode . (lambda () (flyspell-mode -1)))
          ('prog-mode . 'flyspell-prog-mode)))
-
-(use-package haskell-mode
-  :straight t)
 
 (use-package comment-tags
   :straight t
@@ -288,6 +245,12 @@
   :straight t
   :init
   (setq geiser-active-implementations '(racket)))
+
+(use-package ido
+  :config
+  (setq ido-enable-flex-matching t
+        ido-everywhere t)
+  (ido-mode 1))
 
 ;; throw away all the list-of-custom-shit!
 (setq custom-file "~/.emacs.d/custom.el")
