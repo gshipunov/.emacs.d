@@ -122,33 +122,18 @@
                           (awk-mode . "awk")
                           (c-mode . "linux")
                           (c++-mode . "stroustrup")
-                          (other . "linux")))
-  ;; extra c packages
-  (use-package irony
-    :straight t
-    :hook (('c-mode . 'irony-mode)
-           ('c++-mode . 'irony-mode)
-           ('irony-mode . 'irony-cdb-autosetup-compile-options)))
-  (use-package flycheck-irony
-    :straight t
-    :after (flycheck)
-    :hook ('flycheck-mode . 'flycheck-irony-setup))
-  (use-package company-irony
-    :straight t
-    :after (company)
-    :config (add-to-list 'company-backends 'company-irony)))
+                          (other . "linux"))))
 
 (use-package tex-site
   :defer t
   :mode ("\\.tex\\'" . latex-mode)
   :straight auctex
   :config
-  (setq TeX-parse-self t))
-
+  (setq TeX-parse-self t)
 (use-package company-auctex
   :straight t
   :config
-  (company-auctex-init))
+  (company-auctex-init)))
 
 (use-package latex-preview-pane
   :straight t)
@@ -234,20 +219,6 @@
   :bind (("C-x C-g" . magit-dispatch)
          ("C-x g" . magit-status)))
 
-(use-package gitattributes-mode
-  :straight t)
-
-(use-package gitconfig-mode
-  :straight t)
-
-(use-package gitignore-mode
-  :straight t)
-
-(use-package which-key
-  :straight t
-  :config
-  (which-key-mode))
-
 (use-package gnuplot-mode
   :straight t)
 
@@ -265,38 +236,12 @@
   (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
   (elpy-enable))
 
-(use-package avy
-  :straight t
-  :bind (("C-:" . avy-goto-char)
-         ("C-'" . avy-goto-char-2)
-         ("M-g w" . avy-goto-word-1)
-         ("M-g f" . avy-goto-line)))
-
 (use-package markdown-mode
   :straight t
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode))
   :init (setq markdown-command "multimarkdown"))
-
-(use-package projectile
-  :straight t
-  :config
-  (projectile-mode 1))
-
-(use-package counsel-projectile
-  :straight t
-  :after projectile
-  :demand
-  :bind (:map projectile-mode-map
-              ("C-c p" . projectile-command-map))
-  :config
-  (counsel-projectile-mode 1))
-
-(use-package darkroom
-  :straight t
-  :init
-  (setq darkroom-text-scale-increase 0))
 
 (use-package company
   :straight t
