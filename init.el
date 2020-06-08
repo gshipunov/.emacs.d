@@ -124,16 +124,16 @@
 ;; old M-x, just-in-case
 (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
-;; healthy people weeks are starting on Monday
-(use-package calendar
-  :init (setq calendar-week-start-day 1))
-
 ;; CC mode default styles
 (setq c-default-style '((java-mode . "java")
                         (awk-mode . "awk")
                         (c-mode . "linux")
                         (c++-mode . "stroustrup")
                         (other . "linux")))
+
+;; healthy people weeks are starting on Monday
+(use-package calendar
+  :init (setq calendar-week-start-day 1))
 
 (use-package tex-site
   :defer t
