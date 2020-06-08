@@ -131,6 +131,10 @@
                         (c++-mode . "stroustrup")
                         (other . "linux")))
 
+;; swiper for search
+(straight-use-package 'swiper)
+(global-set-key "\C-s" 'swiper)
+
 ;; healthy people weeks are starting on Monday
 (use-package calendar
   :init (setq calendar-week-start-day 1))
@@ -199,6 +203,7 @@
      (python . t)
      (C . t)))
   :config
+  ;; abbrev expansion in org-mode
   (require 'org-tempo))
 
 (use-package magit
