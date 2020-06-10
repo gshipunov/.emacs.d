@@ -109,21 +109,6 @@
 
 (load-theme 'leuven t)
 
-;; ido does most of what I need, and built in!
-(require 'ido)
-;; we want it everywhere and want fancy matching
-(setq ido-enable-flex-matching t
-      ido-everywhere t)
-(ido-mode 1)
-
-;; better M-x (ido based)
-(straight-use-package 'smex)
-(smex-initialize)
-(global-set-key (kbd "M-x") 'smex)
-(global-set-key (kbd "M-X") 'smex-major-mode-commands)
-;; old M-x, just-in-case
-(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
-
 ;; CC mode default styles
 (setq c-default-style '((java-mode . "java")
                         (awk-mode . "awk")
@@ -134,6 +119,12 @@
 ;; swiper for search
 (straight-use-package 'swiper)
 (global-set-key "\C-s" 'swiper)
+;; ivy for completion
+(straight-use-package 'ivy)
+(ivy-mode 1)
+;; counsel for ivy-powered alternatives
+(straight-use-package 'counsel)
+(counsel-mode 1)
 
 ;; healthy people weeks are starting on Monday
 (use-package calendar
