@@ -41,6 +41,7 @@
 ;; readline prevails
 (global-set-key "\C-w" 'backward-kill-word)
 (global-set-key "\C-x\C-k" 'kill-region)
+(global-set-key "\C-h" 'delete-backward-char)
 
 (defadvice term-handle-exit
     (after term-kill-buffer-on-exit activate)
@@ -54,7 +55,10 @@
 (add-hook 'prog-mode-hook #'my-whitespace-hook)
 (add-hook 'text-mode-hook #'my-whitespace-hook)
 
-;; let's try to fix the pile of burning garbage that emacs calls a tab
+;; let's try to fix the pile of burning garbage that emacs calls a
+;; tab. If anyone reading actually knows why mixing tabs and spaces or
+;; deleting the tab one space at a time is a good idea, please drop me
+;; an email. I want to know.
 (require 'whitespace)
 (setq whitespace-style '(face tabs tab-mark))
 (setq whitespace-display-mappings
@@ -80,6 +84,33 @@
 (add-hook 'lisp-mode-hook 'tabs-nay)
 (add-hook 'scheme-mode-hook 'tabs-nay)
 (add-hook 'emacs-lisp-mode-hook 'tabs-nay)
+
+;; time to throw out this "DocView" abomination: full featured pdf
+;; viewer of antiquity, that emacs uses today!
+(defun ensc/mailcap-mime-data-filter (filter)
+  (mapcar (lambda(major)
+            (append (list (car major))
+                    (remove nil
+                            (mapcar (lambda(minor)
+                                      (when (funcall filter (car major) (car minor) (cdr minor))
+                                        minor))
+                                    (cdr major)))))
+          mailcap-mime-data))
+
+(defun ensc/no-pdf-doc-view-filter (major minor spec)
+  (if (and (string= major "application")
+           (string= minor "pdf")
+           (member '(viewer . doc-view-mode) spec))
+      nil
+    t))
+
+(eval-after-load 'mailcap
+  '(progn
+     (setq mailcap-mime-data
+           (ensc/mailcap-mime-data-filter 'ensc/no-pdf-doc-view-filter))))
+
+;; and this seems to make xdg-open work
+(setq process-connection-type nil)
 
 ;; highlight the parens
 (setq show-paren-delay 0)
