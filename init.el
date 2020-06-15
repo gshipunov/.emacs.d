@@ -277,6 +277,10 @@
   :init
   (setq geiser-active-implementations '(racket)))
 
+(use-package flycheck
+  :straight t
+  :init (global-flycheck-mode))
+
 ;; throw away all the list-of-custom-shit!
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
