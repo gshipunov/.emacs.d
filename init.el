@@ -159,6 +159,11 @@
 (straight-use-package 'counsel)
 (counsel-mode 1)
 
+;; completion by default - welcome to 2020
+(straight-use-package 'company)
+(straight-use-package 'company-auctex)
+(add-hook 'after-init-hook 'global-company-mode)
+
 ;; healthy people weeks are starting on Monday
 (use-package calendar
   :init (setq calendar-week-start-day 1))
@@ -168,7 +173,11 @@
   :mode ("\\.tex\\'" . latex-mode)
   :straight auctex
   :config
-  (setq TeX-parse-self t))
+  (setq TeX-parse-self t)
+  ;; completion for LaTeX
+  (use-package company-auctex
+    :config
+    (company-auctex-init)))
 
 (use-package latex-preview-pane
   :straight t)
