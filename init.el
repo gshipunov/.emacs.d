@@ -138,9 +138,9 @@
 (straight-use-package 'leuven-theme)
 (straight-use-package 'zenburn-theme)
 
-(load-theme 'gruvbox-dark-hard t)
-;; italic comments
-(set-face-italic 'font-lock-comment-face t)
+(if (display-graphic-p)
+    (load-theme 'leuven t)
+  (load-theme 'zenburn t))
 
 ;; CC mode default styles
 (setq c-default-style '((java-mode . "java")
