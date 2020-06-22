@@ -231,10 +231,11 @@
   ;; babel stuff
   (org-babel-do-load-languages
    'org-babel-load-languages
-   '((scheme . t)
+   '((C . t)
+     (dot . t)
      (emacs-lisp .t)
      (python . t)
-     (C . t)))
+     (scheme . t)))
   :config
   ;; abbrev expansion in org-mode
   (require 'org-tempo))
