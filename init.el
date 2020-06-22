@@ -222,8 +222,8 @@
            (file+datetree "~/nextcloud/org/log.org.gpg")
            "**** %U %?\n")
           ("b" "Bookmark" entry
-           (file "~/nextcloud/org/bookmarks.org")
-           "* [[%x][%?]\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n")))
+           (file+headline "~/nextcloud/org/bookmarks.org" "Inbox")
+           "** [[%x][%?]\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n")))
   ;; autosave advices for agenda and org-capture
   (advice-add 'org-agenda-quit :before 'org-save-all-org-buffers)
   (advice-add 'org-capture-finalize :after 'org-save-all-org-buffers)
