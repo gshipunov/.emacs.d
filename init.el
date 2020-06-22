@@ -138,9 +138,8 @@
 (straight-use-package 'leuven-theme)
 (straight-use-package 'zenburn-theme)
 
-(if (display-graphic-p)
-    (load-theme 'leuven t)
-  (load-theme 'zenburn t))
+(load-theme 'zenburn t)
+(set-face-italic 'font-lock-comment-face t)
 
 ;; CC mode default styles
 (setq c-default-style '((java-mode . "java")
