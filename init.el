@@ -109,8 +109,8 @@
      (setq mailcap-mime-data
            (ensc/mailcap-mime-data-filter 'ensc/no-pdf-doc-view-filter))))
 
-;; and this seems to make xdg-open work
-(setq process-connection-type nil)
+;; TODO: and this seems to make xdg-open work, but breaks python interpreter
+;; (setq process-connection-type nil)
 
 ;; highlight the parens
 (setq show-paren-delay 0)
