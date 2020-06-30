@@ -136,9 +136,8 @@
 ;; color theme
 (straight-use-package 'gruvbox-theme)
 (straight-use-package 'leuven-theme)
-(straight-use-package 'zenburn-theme)
 
-(load-theme 'zenburn t)
+(load-theme 'gruvbox-dark-hard t)
 (set-face-italic 'font-lock-comment-face t)
 
 ;; CC mode default styles
