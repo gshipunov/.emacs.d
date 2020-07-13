@@ -142,6 +142,7 @@
 
 (load-theme 'gruvbox-dark-hard t)
 (set-face-italic 'font-lock-comment-face t)
+(set-face-italic 'font-lock-comment-delimiter-face nil)
 
 ;; CC mode default styles
 (setq c-default-style '((java-mode . "java")
