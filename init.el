@@ -25,7 +25,9 @@
 (require 'use-package)
 
 ;; essential config
-(menu-bar-mode -1)
+(if (eq system-type 'darwin)
+  (menu-bar-mode 1) ; if on a mac, there's global menu anyway
+  (menu-bar-mode -1))
 (tool-bar-mode -1)
 (toggle-scroll-bar 1)
 (global-display-line-numbers-mode)
