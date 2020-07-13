@@ -74,9 +74,12 @@
 
 ;;helper functions to switch tab expansion on and off
 (defun tabs-yay ()
+  "Function to enable tab indentation in buffer."
   ;;(local-set-key (kbd "TAB") 'tab-to-tab-stop)
   (setq indent-tabs-mode t))
-(defun tabs-nay () (setq indent-tabs-mode nil))
+(defun tabs-nay ()
+  "Function to enable space indentation in buffer."
+  (setq indent-tabs-mode nil))
 
 ;; wasteland of hooks regarding tabs behavior Remember how it "Just
 ;; worked"™ in vim? That's what you pay with for org mode
