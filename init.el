@@ -89,6 +89,7 @@
 (add-hook 'lisp-mode-hook 'tabs-nay)
 (add-hook 'scheme-mode-hook 'tabs-nay)
 (add-hook 'emacs-lisp-mode-hook 'tabs-nay)
+(add-hook 'nix-mode-hook 'tabs-nay)
 
 ;; time to throw out this "DocView" abomination: full featured pdf
 ;; viewer of antiquity, that emacs uses today!
@@ -296,6 +297,10 @@
 (use-package flycheck
   :straight t
   :init (global-flycheck-mode))
+
+(use-package nix-mode
+  :straight t
+  :mode "\\.nix\\'")
 
 ;; throw away all the list-of-custom-shit!
 (setq custom-file "~/.emacs.d/custom.el")
