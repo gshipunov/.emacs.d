@@ -85,7 +85,10 @@
 
 ;; wasteland of hooks regarding tabs behavior Remember how it "Just
 ;; worked"™ in vim? That's what you pay with for org mode
+;; yays: (need to make a list or something)
 (add-hook 'prog-mode-hook 'tabs-yay)
+
+;; nays
 (add-hook 'lisp-mode-hook 'tabs-nay)
 (add-hook 'scheme-mode-hook 'tabs-nay)
 (add-hook 'emacs-lisp-mode-hook 'tabs-nay)
@@ -285,7 +288,7 @@
   :bind ("C-=" . er/expand-region))
 
 (use-package vterm
-  :bind ("C-c C-t" . vterm)
+  :bind ("C-c t" . vterm)
   :init
   (setq vterm-kill-buffer-on-exit t))
 
@@ -301,6 +304,17 @@
 (use-package nix-mode
   :straight t
   :mode "\\.nix\\'")
+
+(use-package markdown-mode
+  :straight t
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode)))
+
+(use-package direnv
+  :straight t
+  :config
+  (direnv-mode))
 
 ;; throw away all the list-of-custom-shit!
 (setq custom-file "~/.emacs.d/custom.el")
