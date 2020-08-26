@@ -295,7 +295,7 @@
 (use-package geiser
   :straight t
   :init
-  (setq geiser-active-implementations '(racket)))
+  (setq geiser-active-implementations '(racket mit)))
 
 (use-package flycheck
   :straight t
