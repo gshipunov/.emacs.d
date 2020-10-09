@@ -281,6 +281,7 @@
 (use-package comment-tags
   :straight t
   :hook (('prog-mode . 'comment-tags-mode)
+         ('markdown-mode . 'comment-tags-mode)
          ('tex-mode . 'comment-tags-mode))
   :init
   (setq comment-tags-require-colon 0))
