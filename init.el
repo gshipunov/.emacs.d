@@ -248,6 +248,11 @@
   ;; abbrev expansion in org-mode
   (require 'org-tempo))
 
+(use-package org-roam
+  :straight t
+  :hook ('after-init-hook . 'org-roam-mode)
+  :init (setq org-roam-directory "~/nextcloud/org/notes"))
+
 (use-package magit
   :straight t
   :bind (("C-x C-g" . magit-dispatch)
