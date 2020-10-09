@@ -74,6 +74,9 @@
 (straight-use-package 'smart-tabs-mode)
 (smart-tabs-insinuate 'c 'c++)
 
+;; radical way to fix emacs mixing tabs and spaces
+(setq-default ident-tabs-mode nil)
+
 ;;helper functions to switch tab expansion on and off
 (defun tabs-yay ()
   "Function to enable tab indentation in buffer."
@@ -86,13 +89,7 @@
 ;; wasteland of hooks regarding tabs behavior Remember how it "Just
 ;; worked"™ in vim? That's what you pay with for org mode
 ;; yays: (need to make a list or something)
-(add-hook 'prog-mode-hook 'tabs-yay)
-
-;; nays
-(add-hook 'lisp-mode-hook 'tabs-nay)
-(add-hook 'scheme-mode-hook 'tabs-nay)
-(add-hook 'emacs-lisp-mode-hook 'tabs-nay)
-(add-hook 'nix-mode-hook 'tabs-nay)
+(add-hook 'cc-mode-hook 'tabs-yay)
 
 ;; time to throw out this "DocView" abomination: full featured pdf
 ;; viewer of antiquity, that emacs uses today!
