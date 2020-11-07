@@ -140,10 +140,7 @@
       version-control t)
 
 ;; color theme
-(straight-use-package 'gruvbox-theme)
-(straight-use-package 'leuven-theme)
-
-(load-theme 'gruvbox-dark-hard t)
+(load-theme 'wombat t)
 (set-face-italic 'font-lock-comment-face t)
 (set-face-italic 'font-lock-comment-delimiter-face nil)
 
