@@ -200,7 +200,6 @@
          (cc-mode . rainbow-delimiters-mode)))
 
 (use-package org
-  :straight org-plus-contrib
   :bind (("C-c a" . org-agenda)
          ("C-c c" . org-capture)
          ("C-c l" . org-store-link)
@@ -257,7 +256,7 @@
 (use-package org-roam
   :straight t
   :hook ('after-init-hook . 'org-roam-mode)
-  :init (setq org-roam-directory "~/nextcloud/org/notes"))
+  :init (setq org-roam-directory "~/nextcloud/org/roam"))
 
 (use-package magit
   :straight t
