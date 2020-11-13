@@ -325,6 +325,12 @@
   :config
   (direnv-mode))
 
+(use-package which-key
+  :straight t
+  :diminish
+  :config
+  (which-key-mode))
+
 ;; throw away all the list-of-custom-shit!
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
