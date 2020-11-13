@@ -212,18 +212,18 @@
         org-startup-folded 'content)
   ;; default agenda files
   (setq org-agenda-files '("~/nextcloud/org/"
-                           "~/nextcloud/org-phone/"
+                           "~/nextcloud/org/phone/"
                            "~/Seafile/ORG/"))
   ;; templates
   (setq org-capture-templates
         '(("t" "TODO" entry
-           (file+headline "~/nextcloud/org/random.org" "Tasks")
+           (file+headline "~/nextcloud/org/inbox.org" "Tasks")
            "** TODO %?\n %i")
           ("T" "TODO+file" entry
-           (file+headline "~/nextcloud/org/random.org" "Tasks")
+           (file+headline "~/nextcloud/org/inbox.org" "Tasks")
            "** TODO %?\n %i\n %a")
           ("n" "note" entry
-           (file+headline "~/nextcloud/org/random.org" "Notes")
+           (file+headline "~/nextcloud/org/inbox.org" "Notes")
            "** %U\n%?\n")
           ("i" "IFW TODO" entry
            (file+headline "~/Seafile/ORG/ifw.org" "Tasks")
@@ -238,6 +238,10 @@
   (advice-add 'org-agenda-quit :before 'org-save-all-org-buffers)
   (advice-add 'org-capture-finalize :after 'org-save-all-org-buffers)
 
+  ;; refile everywhere where agenda lives
+  (setq org-refile-targets
+        '((nil :maxlevel . 1)
+          (org-agenda-files :maxlevel . 1)))
   ;; babel stuff
   (org-babel-do-load-languages
    'org-babel-load-languages
