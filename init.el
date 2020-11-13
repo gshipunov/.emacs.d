@@ -144,7 +144,8 @@
       version-control t)
 
 ;; color theme
-(load-theme 'wombat t)
+(straight-use-package 'color-theme-sanityinc-tomorrow)
+(load-theme 'sanityinc-tomorrow-night 1)
 (set-face-italic 'font-lock-comment-face t)
 (set-face-italic 'font-lock-comment-delimiter-face nil)
 
