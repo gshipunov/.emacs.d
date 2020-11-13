@@ -26,7 +26,7 @@
 
 ;; essential config
 (if (eq system-type 'darwin)
-  (menu-bar-mode 1) ; if on a mac, there's global menu anyway
+    (menu-bar-mode 1) ; if on a mac, there's global menu anyway
   (menu-bar-mode -1))
 (tool-bar-mode -1)
 (toggle-scroll-bar 1)
@@ -67,7 +67,7 @@
 (require 'whitespace)
 (setq whitespace-style '(face tabs tab-mark))
 (setq whitespace-display-mappings
-  '((tab-mark 9 [187 9] [92 9])))
+      '((tab-mark 9 [187 9] [92 9])))
 (add-hook 'prog-mode-hook #'whitespace-mode)
 (diminish 'whitespace-mode)
 
@@ -79,7 +79,7 @@
 (smart-tabs-insinuate 'c 'c++)
 
 ;; radical way to fix emacs mixing tabs and spaces
-(setq-default ident-tabs-mode nil)
+(setq-default indent-tabs-mode nil)
 
 ;;helper functions to switch tab expansion on and off
 (defun tabs-yay ()
@@ -92,7 +92,6 @@
 
 ;; wasteland of hooks regarding tabs behavior Remember how it "Just
 ;; worked"™ in vim? That's what you pay with for org mode
-;; yays: (need to make a list or something)
 (add-hook 'cc-mode-hook 'tabs-yay)
 
 ;; time to throw out this "DocView" abomination: full featured pdf
