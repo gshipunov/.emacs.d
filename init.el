@@ -36,6 +36,9 @@
 (setq auto-save-default nil)
 (setq visible-bell t)
 
+;; declutter modeline with diminish
+(straight-use-package 'diminish)
+
 ;; magic in the world of idiotic defaults...
 (fset 'yes-or-no-p 'y-or-n-p)
 (setq confirm-nonexistent-file-or-buffer nil)
@@ -66,6 +69,7 @@
 (setq whitespace-display-mappings
   '((tab-mark 9 [187 9] [92 9])))
 (add-hook 'prog-mode-hook #'whitespace-mode)
+(diminish 'whitespace-mode)
 
 ;; let's delete a tab as a whole...
 (setq backward-delete-char-untabify-method 'nil)
@@ -157,14 +161,18 @@
 ;; ivy for completion
 (straight-use-package 'ivy)
 (ivy-mode 1)
+(diminish 'ivy-mode)
+
 ;; counsel for ivy-powered alternatives
 (straight-use-package 'counsel)
 (counsel-mode 1)
+(diminish 'counsel-mode)
 
 ;; completion by default - welcome to 2020
 (straight-use-package 'company)
 (straight-use-package 'company-auctex)
 (add-hook 'after-init-hook 'global-company-mode)
+(diminish 'company-mode)
 
 ;; healthy people weeks are starting on Monday
 (use-package calendar
@@ -254,6 +262,7 @@
 
 (use-package undo-tree
   :straight t
+  :diminish
   :config
   (global-undo-tree-mode 1))
 
