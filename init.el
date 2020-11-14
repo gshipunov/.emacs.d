@@ -163,6 +163,14 @@
 (ivy-mode 1)
 (diminish 'ivy-mode)
 
+;; ignore substring order, except for swiper
+(setq ivy-re-builders-alist
+      '((swiper . ivy--regex-plus)
+        (t      . ivy--regex-ignore-order)))
+;; do not use caret, quite often we want start typing from the middle
+(eval-after-load 'counsel ;counsel modifies this var
+  (setq ivy-initial-inputs-alist nil))
+
 ;; counsel for ivy-powered alternatives
 (straight-use-package 'counsel)
 (counsel-mode 1)
