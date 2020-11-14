@@ -200,6 +200,7 @@
          (cc-mode . rainbow-delimiters-mode)))
 
 (use-package org
+  :straight org-plus-contrib
   :bind (("C-c a" . org-agenda)
          ("C-c c" . org-capture)
          ("C-c l" . org-store-link)
@@ -249,6 +250,8 @@
      (emacs-lisp .t)
      (python . t)
      (scheme . t)))
+  ;; latex preview settings
+  (add-to-list 'org-latex-packages-alist '("" "braket" t))
   :config
   ;; abbrev expansion in org-mode
   (require 'org-tempo))
@@ -256,7 +259,8 @@
 (use-package org-roam
   :straight t
   :hook ('after-init-hook . 'org-roam-mode)
-  :init (setq org-roam-directory "~/nextcloud/org/roam"))
+  :init (setq org-roam-directory "~/nextcloud/org/roam"
+              org-roam-db-update-method 'immediate))
 
 (use-package magit
   :straight t
