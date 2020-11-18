@@ -197,10 +197,10 @@
   ;; templates
   (setq org-capture-templates
         '(("t" "TODO" entry
-           (file+headline "~/nextcloud/org/inbox.org" "Tasks")
+           (file+headline "~/nextcloud/org/inbox.org" "tasks-inbox")
            "** TODO %?\n %i")
           ("T" "TODO+file" entry
-           (file+headline "~/nextcloud/org/inbox.org" "Tasks")
+           (file+headline "~/nextcloud/org/inbox.org" "tasks-inbox")
            "** TODO %?\n %i\n %a")
           ("n" "note" entry
            (file+headline "~/nextcloud/org/inbox.org" "Notes")
@@ -212,9 +212,9 @@
            (file+datetree "~/nextcloud/org/log.org.gpg")
            "**** %U %?\n")
           ("b" "Bookmark" entry
-           (file+headline "~/nextcloud/org/bookmarks.org" "Inbox")
-           "** [[%x][%?]\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n")))
-  ;; autosave advices for agenda and org-capture
+           (file+headline "~/nextcloud/org/inbox.org" "bookmarks-inbox")
+           "** TODO [[%x]]%?\n:PROPERTIES:\n:CREATED: %U\n:END:\n[[%x]]\n")))
+  ;; autosave advises for agenda and org-capture
   (advice-add 'org-agenda-quit :before 'org-save-all-org-buffers)
   (advice-add 'org-capture-finalize :after 'org-save-all-org-buffers)
 
