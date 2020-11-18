@@ -43,7 +43,6 @@
 ;; readline prevails
 (global-set-key "\C-w" 'backward-kill-word)
 (global-set-key "\C-x\C-k" 'kill-region)
-(global-set-key "\C-h" 'delete-backward-char)
 
 (defadvice term-handle-exit
     (after term-kill-buffer-on-exit activate)
