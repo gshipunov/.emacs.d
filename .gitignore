@@ -11,3 +11,6 @@ straight
 transient
 games
 bookmarks
+org-roam.db
+eln-cache
+org-latex-preview

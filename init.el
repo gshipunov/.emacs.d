@@ -230,7 +230,8 @@
      (python . t)
      (scheme . t)))
   ;; latex preview settings
-  (add-to-list 'org-latex-packages-alist '("" "braket" t))
+  (add-to-list 'org-latex-packages-alist '("" "braket" t)) ; Dirac brakets
+  (setq org-preview-latex-image-directory "~/.emacs.d/org-latex-preview/") ; Hide all previews in one place
   :config
   ;; abbrev expansion in org-mode
   (require 'org-tempo))
