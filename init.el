@@ -24,10 +24,7 @@
 (straight-use-package 'use-package)
 (require 'use-package)
 
-;; essential config
-(if (eq system-type 'darwin)
-    (menu-bar-mode 1) ; if on a mac, there's global menu anyway
-  (menu-bar-mode -1))
+(menu-bar-mode 1) ; menu-bar is underrated
 (tool-bar-mode -1)
 (toggle-scroll-bar 1)
 (global-display-line-numbers-mode)
@@ -120,8 +117,6 @@
       version-control t)
 
 ;; color theme
-(straight-use-package 'color-theme-sanityinc-tomorrow)
-(load-theme 'sanityinc-tomorrow-night 1)
 (set-face-italic 'font-lock-comment-face t)
 (set-face-italic 'font-lock-comment-delimiter-face nil)
 
