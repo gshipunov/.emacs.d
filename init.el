@@ -199,35 +199,37 @@
   ;; default agenda files
   (setq org-agenda-files '("~/nextcloud/org/"
                            "~/nextcloud/org/phone/"
+                           "~/nextcloud/org/roam/"
                            "~/Seafile/ORG/"))
+  ;; default agenda view
+  (setq org-agenda-start-day "-3d"
+        org-agenda-span 13)
   ;; templates
   (setq org-capture-templates
         '(("t" "TODO" entry
-           (file+headline "~/nextcloud/org/inbox.org" "tasks-inbox")
-           "** TODO %?\n %i")
+           (file+headline "~/nextcloud/org/random.org" "Tasks")
+           "** TODO %?\n%i")
           ("T" "TODO+file" entry
-           (file+headline "~/nextcloud/org/inbox.org" "tasks-inbox")
-           "** TODO %?\n %i\n %a")
+           (file+headline "~/nextcloud/org/random.org" "Tasks")
+           "** TODO %?\n%i\n%a")
           ("n" "note" entry
-           (file+headline "~/nextcloud/org/inbox.org" "Notes")
-           "** %U\n%?\n")
+           (file+headline "~/nextcloud/org/random.org" "Notes")
+           "** %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n")
           ("i" "IFW TODO" entry
-           (file+headline "~/Seafile/ORG/ifw.org" "Tasks")
-           "** TODO %?\n %i \n%U")
+           (file+headline "~/Seafile/ORG/ifw-inbox.org" "ifw-tasks")
+           "** TODO %?\n%i\n%U")
           ("j" "Journal" entry
-           (file+datetree "~/nextcloud/org/log.org.gpg")
+           (file+olp+datetree "~/nextcloud/org/log.org.gpg")
            "**** %U %?\n")
           ("b" "Bookmark" entry
-           (file+headline "~/nextcloud/org/inbox.org" "bookmarks-inbox")
-           "** TODO [[%x]]%?\n:PROPERTIES:\n:CREATED: %U\n:END:\n[[%x]]\n")))
+           (file+headline "~/nextcloud/org/bookmarks.org" "bookmarks-inbox")
+           "** TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n[[%x]]\n")))
   ;; autosave advises for agenda and org-capture
   (advice-add 'org-agenda-quit :before 'org-save-all-org-buffers)
   (advice-add 'org-capture-finalize :after 'org-save-all-org-buffers)
+  (advice-add 'org-capture-refile :after 'org-save-all-org-buffers)
 
   ;; refile everywhere where agenda lives
-  (setq org-refile-targets
-        '((nil :maxlevel . 1)
-          (org-agenda-files :maxlevel . 1)))
   ;; babel stuff
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -239,15 +241,37 @@
   ;; latex preview settings
   (add-to-list 'org-latex-packages-alist '("" "braket" t)) ; Dirac brakets
   (setq org-preview-latex-image-directory "~/.emacs.d/org-latex-preview/") ; Hide all previews in one place
+  ;; org-id - link by UUID
+  (require 'org-id)
+  (setq org-id-method 'uuid
+        org-id-link-to-org-use-id t)
   :config
   ;; abbrev expansion in org-mode
   (require 'org-tempo))
 
 (use-package org-roam
   :straight t
+  :diminish t
+  :after org
   :hook ('after-init-hook . 'org-roam-mode)
   :init (setq org-roam-directory "~/nextcloud/org/roam"
               org-roam-db-update-method 'immediate))
+
+(use-package org-ref
+  :straight t
+  :after org
+  :init (setq bibtex-completion-bibliography
+              '("~/Seafile/ORG/complete-library.bib")))
+
+(use-package org-noter
+  :straight t
+  :after org)
+
+(use-package org-download
+  :straight t
+  :init (setq org-download-method 'directory
+              org-download-image-dir "./static/org-download"
+              org-download-heading-lvl nil))
 
 (use-package magit
   :straight t
