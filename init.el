@@ -35,6 +35,10 @@
 (setq auto-save-default nil)
 (setq visible-bell t)
 
+;; my personal keymap
+(define-prefix-command 'oxamap)
+(global-set-key (kbd "C-z") 'oxamap)
+
 ;; declutter modeline with diminish
 (straight-use-package 'diminish)
 
@@ -171,6 +175,11 @@
 (use-package calendar
   :init (setq calendar-week-start-day 1))
 
+(use-package ace-window
+  :straight t
+  :defer t
+  :bind (:map oxamap ("o" . ace-window)))
+
 (use-package tex-site
   :defer t
   :mode ("\\.tex\\'" . latex-mode)
@@ -260,6 +269,12 @@
   :straight t
   :diminish t
   :after org
+  :bind (:map oxamap
+              ("r t" . org-roam-dailies-find-today)
+              ("r f" . org-roam-find-file)
+              ("r F" . org-roam-find-file-immediate)
+              ("r i" . org-roam-insert)
+              ("r I" . org-roam-insert-immediate))
   :hook ('after-init-hook . 'org-roam-mode)
   :init (setq org-roam-directory "~/nextcloud/org/roam"
               org-roam-db-update-method 'immediate))
