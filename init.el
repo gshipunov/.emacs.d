@@ -154,6 +154,11 @@
 (counsel-mode 1)
 (diminish 'counsel-mode)
 
+;; navigation with avy
+(use-package avy
+  :straight t
+  :bind ("M-s" . avy-goto-word-1))
+
 ;; completion by default - welcome to 2020
 (straight-use-package 'company)
 (straight-use-package 'company-auctex)
