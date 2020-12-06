@@ -264,9 +264,9 @@
 (use-package ispell
   :config
   (setq-default ispell-program-name "hunspell")
-  (setq ispell-dictionary "en_US,de_DE,ru_RU")
+  (setq ispell-dictionary "en_US,ru_RU")
   (ispell-set-spellchecker-params)
-  (ispell-hunspell-add-multi-dic "en_US,de_DE,ru_RU"))
+  (ispell-hunspell-add-multi-dic "en_US,ru_RU"))
 
 (use-package flyspell
   :straight t
