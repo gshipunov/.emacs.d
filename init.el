@@ -314,6 +314,12 @@
   :config
   (direnv-mode))
 
+(use-package editorconfig
+  :straight t
+  :diminish t
+  :config
+  (editorconfig-mode 1))
+
 (use-package which-key
   :straight t
   :diminish
