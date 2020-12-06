@@ -102,8 +102,10 @@
 (add-hook 'cc-mode-hook 'tabs-yay)
 
 ;; pdftools ftw, docview is shit that needs to be left in the past
-(require 'pdf-tools)
-(pdf-loader-install)
+(use-package pdf-tools
+  :straight t
+  :config
+  (pdf-loader-install))
 
 ;; highlight the parens
 (setq show-paren-delay 0)
