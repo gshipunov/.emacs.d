@@ -251,7 +251,7 @@
 
 (use-package magit
   :straight t
-  :bind (("C-x C-g" . magit-dispatch)
+  :bind (("C-x G" . magit-dispatch)
          ("C-x g" . magit-status)))
 
 (use-package undo-tree
