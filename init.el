@@ -24,7 +24,9 @@
 (straight-use-package 'use-package)
 (require 'use-package)
 
-(menu-bar-mode 1) ; menu-bar is underrated
+(if (display-graphic-p)
+    (menu-bar-mode 1) ; menu-bar is underrated
+  (menu-bar-mode -1))
 (tool-bar-mode -1)
 (toggle-scroll-bar 1)
 (global-display-line-numbers-mode)
@@ -43,6 +45,12 @@
 ;; readline prevails
 (global-set-key "\C-w" 'backward-kill-word)
 (global-set-key "\C-x\C-k" 'kill-region)
+
+;; color theme
+(straight-use-package 'gruvbox-theme)
+(load-theme 'gruvbox-dark-hard t)
+(set-face-italic 'font-lock-comment-face 1)
+(set-face-italic 'font-lock-comment-delimiter-face nil)
 
 (defadvice term-handle-exit
     (after term-kill-buffer-on-exit activate)
@@ -64,6 +72,9 @@
 (setq whitespace-style '(face tabs tab-mark))
 (setq whitespace-display-mappings
       '((tab-mark 9 [187 9] [92 9])))
+(set-face-inverse-video 'whitespace-tab nil)
+(set-face-foreground 'whitespace-tab "#3c3c3c")
+(set-face-background 'whitespace-tab nil)
 (add-hook 'prog-mode-hook #'whitespace-mode)
 (diminish 'whitespace-mode)
 
@@ -114,10 +125,6 @@
       kept-new-versions 6
       kept-old-versions 2
       version-control t)
-
-;; color theme
-(set-face-italic 'font-lock-comment-face t)
-(set-face-italic 'font-lock-comment-delimiter-face nil)
 
 ;; CC mode default styles
 (setq c-default-style '((java-mode . "java")
