@@ -295,11 +295,6 @@
   :init
   (setq vterm-kill-buffer-on-exit t))
 
-(use-package geiser
-  :straight t
-  :init
-  (setq geiser-active-implementations '(racket)))
-
 (use-package flycheck
   :straight t
   :init (global-flycheck-mode))
