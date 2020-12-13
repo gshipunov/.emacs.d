@@ -220,7 +220,10 @@
   ;; default agenda files
   (setq org-agenda-files '("~/nextcloud/org/"
                            "~/nextcloud/org/phone/"
+                           "~/nextcloud/org/learning/SICP/"
+                           "~/nextcloud/org/learning/kernighan-ritchie/"
                            "~/nextcloud/org/roam/"
+                           "~/nextcloud/org/roam/daily/"
                            "~/Seafile/ORG/"))
   ;; default agenda view
   (setq org-agenda-start-day "-3d"
