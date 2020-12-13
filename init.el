@@ -342,6 +342,7 @@
   :bind ("C-=" . er/expand-region))
 
 (use-package vterm
+  :straight t
   :bind ("C-c t" . vterm)
   :init
   (setq vterm-kill-buffer-on-exit t))
