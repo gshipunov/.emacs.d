@@ -24,9 +24,7 @@
 (straight-use-package 'use-package)
 (require 'use-package)
 
-(if (display-graphic-p)
-    (menu-bar-mode 1) ; menu-bar is underrated
-  (menu-bar-mode -1))
+(menu-bar-mode -1)
 (tool-bar-mode -1)
 (toggle-scroll-bar 1)
 (global-display-line-numbers-mode)
@@ -51,8 +49,15 @@
 (global-set-key "\C-x\C-k" 'kill-region)
 
 ;; color theme
-(straight-use-package 'gruvbox-theme)
-(load-theme 'gruvbox-dark-hard t)
+(straight-use-package 'modus-themes)
+(require 'modus-vivendi-theme)
+(setq modus-themes-bold-constructs t
+      modus-themes-slanted-constructs t
+      modus-themes-mode-line '3d
+      modus-themes-org-blocks 'grayscale
+      modus-themes-headings '((t . section)))
+
+(load-theme 'modus-vivendi t)
 (set-face-italic 'font-lock-comment-face 1)
 (set-face-italic 'font-lock-comment-delimiter-face nil)
 
