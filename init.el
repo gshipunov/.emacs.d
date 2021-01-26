@@ -26,7 +26,7 @@
 
 (menu-bar-mode -1)
 (tool-bar-mode -1)
-(toggle-scroll-bar 1)
+(toggle-scroll-bar -1)
 (global-display-line-numbers-mode)
 (column-number-mode 1)
 (setq inhibit-startup-screen t)
@@ -374,6 +374,11 @@
   :diminish
   :config
   (which-key-mode))
+
+(use-package nyan-mode
+  :straight t
+  :config
+  (nyan-mode 1))
 
 ;; throw away all the list-of-custom-shit!
 (setq custom-file "~/.emacs.d/custom.el")
