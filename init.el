@@ -216,12 +216,11 @@
   :init
   ;; we need indentation
   (setq org-startup-indented t
+        org-hide-leading-stars nil
         org-startup-folded 'content)
   ;; default agenda files
   (setq org-agenda-files '("~/nextcloud/org/"
                            "~/nextcloud/org/phone/"
-                           "~/nextcloud/org/learning/SICP/"
-                           "~/nextcloud/org/learning/kernighan-ritchie/"
                            "~/nextcloud/org/roam/"
                            "~/nextcloud/org/roam/daily/"
                            "~/Seafile/ORG/"))
@@ -286,16 +285,6 @@
   :hook ('after-init-hook . 'org-roam-mode)
   :init (setq org-roam-directory "~/nextcloud/org/roam"
               org-roam-db-update-method 'immediate))
-
-(use-package org-ref
-  :straight t
-  :after org
-  :init (setq bibtex-completion-bibliography
-              '("~/Seafile/ORG/complete-library.bib")))
-
-(use-package org-noter
-  :straight t
-  :after org)
 
 (use-package org-download
   :straight t
