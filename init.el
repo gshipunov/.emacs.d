@@ -40,7 +40,6 @@
 ;; declutter modeline with diminish
 (straight-use-package 'diminish)
 
-;; magic in the world of idiotic defaults...
 (fset 'yes-or-no-p 'y-or-n-p)
 (setq confirm-nonexistent-file-or-buffer nil)
 
@@ -55,7 +54,8 @@
       modus-themes-slanted-constructs t
       modus-themes-mode-line '3d
       modus-themes-org-blocks 'grayscale
-      modus-themes-headings '((t . section)))
+      modus-themes-headings '((t . section))
+      modus-themes-no-mixed-fonts t)
 
 (load-theme 'modus-vivendi t)
 (set-face-italic 'font-lock-comment-face 1)
@@ -94,9 +94,6 @@
 (straight-use-package 'smart-tabs-mode)
 (smart-tabs-insinuate 'c 'c++)
 
-;; radical way to fix emacs mixing tabs and spaces
-(setq-default indent-tabs-mode nil)
-
 ;;helper functions to switch tab expansion on and off
 (defun tabs-yay ()
   "Function to enable tab indentation in buffer."
@@ -106,11 +103,13 @@
   "Function to enable space indentation in buffer."
   (setq indent-tabs-mode nil))
 
-;; wasteland of hooks regarding tabs behavior Remember how it "Just
-;; worked"™ in vim? That's what you pay with for org mode
 (add-hook 'cc-mode-hook 'tabs-yay)
 
-;; pdftools ftw, docview is shit that needs to be left in the past
+(add-hook 'elisp-mode-hook 'tabs-nay)
+(add-hook 'python-mode-hook 'tabs-nay)
+(add-hook 'racket-mode-hook 'tabs-nay)
+
+;; prefer pdftools over docview
 (use-package pdf-tools
   :straight t
   :config
@@ -195,9 +194,6 @@
   (use-package company-auctex
     :config
     (company-auctex-init)))
-
-(use-package latex-preview-pane
-  :straight t)
 
 (use-package rainbow-delimiters
   :straight t
@@ -306,10 +302,11 @@
 ;; I positively cannot spell :D
 (use-package ispell
   :config
+  (setenv "LANG" "en_US")
   (setq-default ispell-program-name "hunspell")
-  (setq ispell-dictionary "en_US,ru_RU")
+  (setq ispell-dictionary "en_US,ru_RU,de_DE")
   (ispell-set-spellchecker-params)
-  (ispell-hunspell-add-multi-dic "en_US,ru_RU"))
+  (ispell-hunspell-add-multi-dic "en_US,ru_RU,de_DE"))
 
 (use-package flyspell
   :straight t
