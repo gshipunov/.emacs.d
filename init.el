@@ -105,13 +105,14 @@
 
 (add-hook 'cc-mode-hook 'tabs-yay)
 
-(add-hook 'elisp-mode-hook 'tabs-nay)
+(add-hook 'scheme-mode-hook 'tabs-nay)
+(add-hook 'lisp-mode-hook 'tabs-nay)
+(add-hook 'emacs-lisp-mode-hook 'tabs-nay)
 (add-hook 'python-mode-hook 'tabs-nay)
 (add-hook 'racket-mode-hook 'tabs-nay)
 
 ;; prefer pdftools over docview
 (use-package pdf-tools
-  :straight t
   :config
   (pdf-loader-install))
 
@@ -212,6 +213,7 @@
   :init
   ;; we need indentation
   (setq org-startup-indented t
+        org-indent-mode-turns-on-hiding-stars nil
         org-hide-leading-stars nil
         org-startup-folded 'content)
   ;; default agenda files
@@ -286,7 +288,7 @@
   :straight t
   :init (setq org-download-method 'directory
               org-download-image-dir "./static/org-download"
-              org-download-heading-lvl nil))
+              org-download-heading-lvl 0))
 
 (use-package magit
   :straight t
@@ -331,7 +333,6 @@
   :bind ("C-=" . er/expand-region))
 
 (use-package vterm
-  :straight t
   :bind ("C-c t" . vterm)
   :init
   (setq vterm-kill-buffer-on-exit t))
