@@ -6,6 +6,13 @@
 (if (version< emacs-version "26.3")
     (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3"))
 
+;; Change some settings based on where we are
+(defvar oxa-workplace "home")
+
+(if (string= oxa-workplace "work")
+    ;; here we have our work proxy
+    (message "we are at work"))
+
 ;; package management with straight.el
 (defvar bootstrap-version)
 (let ((bootstrap-file
@@ -22,7 +29,6 @@
 
 ;; Use use-package for sugar, but use straight.el under the hood
 (straight-use-package 'use-package)
-(require 'use-package)
 
 (menu-bar-mode -1)
 (tool-bar-mode -1)
@@ -43,21 +49,6 @@
 (fset 'yes-or-no-p 'y-or-n-p)
 (setq confirm-nonexistent-file-or-buffer nil)
 
-;; readline prevails
-(global-set-key "\C-w" 'backward-kill-word)
-(global-set-key "\C-x\C-k" 'kill-region)
-
-;; color theme
-(straight-use-package 'modus-themes)
-(require 'modus-vivendi-theme)
-(setq modus-themes-bold-constructs t
-      modus-themes-slanted-constructs t
-      modus-themes-mode-line '3d
-      modus-themes-org-blocks 'grayscale
-      modus-themes-headings '((t . section))
-      modus-themes-no-mixed-fonts t)
-
-(load-theme 'modus-vivendi t)
 (set-face-italic 'font-lock-comment-face 1)
 (set-face-italic 'font-lock-comment-delimiter-face nil)
 
@@ -70,6 +61,7 @@
   "Hook to show trailing whitespace and empty lines."
   (setq show-trailing-whitespace t
         indicate-empty-lines t))
+
 (add-hook 'prog-mode-hook #'my-whitespace-hook)
 (add-hook 'text-mode-hook #'my-whitespace-hook)
 
@@ -94,27 +86,14 @@
 (straight-use-package 'smart-tabs-mode)
 (smart-tabs-insinuate 'c 'c++)
 
-;;helper functions to switch tab expansion on and off
+(setq-default indent-tabs-mode 'nil)
+;;helper functions to switch tab expansion off when needed
 (defun tabs-yay ()
   "Function to enable tab indentation in buffer."
   ;;(local-set-key (kbd "TAB") 'tab-to-tab-stop)
   (setq indent-tabs-mode t))
-(defun tabs-nay ()
-  "Function to enable space indentation in buffer."
-  (setq indent-tabs-mode nil))
 
 (add-hook 'cc-mode-hook 'tabs-yay)
-
-(add-hook 'scheme-mode-hook 'tabs-nay)
-(add-hook 'lisp-mode-hook 'tabs-nay)
-(add-hook 'emacs-lisp-mode-hook 'tabs-nay)
-(add-hook 'python-mode-hook 'tabs-nay)
-(add-hook 'racket-mode-hook 'tabs-nay)
-
-;; prefer pdftools over docview
-(use-package pdf-tools
-  :config
-  (pdf-loader-install))
 
 ;; highlight the parens
 (setq show-paren-delay 0)
@@ -165,14 +144,8 @@
 (counsel-mode 1)
 (diminish 'counsel-mode)
 
-;; navigation with avy
-(use-package avy
-  :straight t
-  :bind ("M-s" . avy-goto-word-1))
-
 ;; completion by default - welcome to 2020
 (straight-use-package 'company)
-(straight-use-package 'company-auctex)
 (add-hook 'after-init-hook 'global-company-mode)
 (diminish 'company-mode)
 
@@ -193,6 +166,8 @@
   (setq TeX-parse-self t)
   ;; completion for LaTeX
   (use-package company-auctex
+    :straight t
+    :diminish t
     :config
     (company-auctex-init)))
 
@@ -204,7 +179,7 @@
          (cc-mode . rainbow-delimiters-mode)))
 
 (use-package org
-  :straight org-plus-contrib
+  :straight t
   :bind (("C-c a" . org-agenda)
          ("C-c c" . org-capture)
          ("C-c l" . org-store-link)
@@ -212,45 +187,54 @@
          ("C-c 1" . org-time-stamp-inactive))
   :init
   ;; we need indentation
-  (setq org-startup-indented t
+  (setq ;org-startup-indented t
         org-indent-mode-turns-on-hiding-stars nil
         org-hide-leading-stars nil
         org-startup-folded 'content)
   ;; default agenda files
-  (setq org-agenda-files '("~/nextcloud/org/"
-                           "~/nextcloud/org/phone/"
-                           "~/nextcloud/org/roam/"
-                           "~/nextcloud/org/roam/daily/"
-                           "~/Seafile/ORG/"))
+  (setq org-agenda-files (cond ((string= oxa-workplace "home") '("~/nextcloud/org/"
+                                                                 "~/nextcloud/org/phone/"
+                                                                 "~/Seafile/ORG/"))
+                               ((string= oxa-workplace "work") '("D:/Seafile/ORG/"))))
   ;; default agenda view
   (setq org-agenda-start-day "-3d"
         org-agenda-span 13)
   ;; templates
   (setq org-capture-templates
-        '(("t" "TODO" entry
-           (file+headline "~/nextcloud/org/random.org" "Tasks")
-           "** TODO %?\n%i")
-          ("T" "TODO+file" entry
-           (file+headline "~/nextcloud/org/random.org" "Tasks")
-           "** TODO %?\n%i\n%a")
-          ("n" "note" entry
-           (file+headline "~/nextcloud/org/random.org" "Notes")
-           "** %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n")
-          ("i" "IFW TODO" entry
-           (file+headline "~/Seafile/ORG/ifw-inbox.org" "ifw-tasks")
-           "** TODO %?\n%i\n%U")
-          ("j" "Journal" entry
-           (file+olp+datetree "~/nextcloud/org/log.org.gpg")
-           "**** %U %?\n")
-          ("b" "Bookmark" entry
-           (file+headline "~/nextcloud/org/bookmarks.org" "bookmarks-inbox")
-           "** TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n[[%x]]\n")))
+        (cond ((string= oxa-workplace "home")
+               '(("t" "TODO" entry
+                  (file+headline "~/nextcloud/org/random.org" "Tasks")
+                  "** TODO %?\n%i")
+                 ("T" "TODO+file" entry
+                  (file+headline "~/nextcloud/org/random.org" "Tasks")
+                  "** TODO %?\n%i\n%a")
+                 ("n" "note" entry
+                  (file+headline "~/nextcloud/org/random.org" "Notes")
+                  "** %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n")
+                 ("it" "IFW TODO" entry
+                  (file+headline "~/Seafile/ORG/ifw.org" "ifw-tasks")
+                  "** TODO %?\n%i\n%U")
+                 ("in" "IFW Note" entry
+                  (file+headline "~/Seafile/ORG/ifw.org" "ifw-notes")
+                  "** %?\n%i\n%U\n:PROPERTIES:\n:CREATED: %U\n:END:\n")
+                 ("j" "Journal" entry
+                  (file+olp+datetree "~/nextcloud/org/log.org.gpg")
+                  "**** %U %?\n")
+                 ("b" "Bookmark" entry
+                  (file+headline "~/nextcloud/org/bookmarks.org" "bookmarks-inbox")
+                  "** TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n[[%x]]\n")))
+              ((string= oxa-workplace "work")
+               '(("it" "IFW TODO" entry
+                  (file+headline "D:/Seafile/ORG/ifw.org" "ifw-tasks")
+                  "** TODO %?\n%i\n%U")
+                 ("in" "IFW Note" entry
+                  (file+headline "D:/Seafile/ORG/ifw.org" "ifw-notes")
+                  "** %?\n%i\n%U\n:PROPERTIES:\n:CREATED: %U\n:END:\n")))))
   ;; autosave advises for agenda and org-capture
   (advice-add 'org-agenda-quit :before 'org-save-all-org-buffers)
   (advice-add 'org-capture-finalize :after 'org-save-all-org-buffers)
   (advice-add 'org-capture-refile :after 'org-save-all-org-buffers)
 
-  ;; refile everywhere where agenda lives
   ;; babel stuff
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -270,20 +254,6 @@
   ;; abbrev expansion in org-mode
   (require 'org-tempo))
 
-(use-package org-roam
-  :straight t
-  :diminish t
-  :after org
-  :bind (:map oxamap
-              ("r t" . org-roam-dailies-find-today)
-              ("r f" . org-roam-find-file)
-              ("r F" . org-roam-find-file-immediate)
-              ("r i" . org-roam-insert)
-              ("r I" . org-roam-insert-immediate))
-  :hook ('after-init-hook . 'org-roam-mode)
-  :init (setq org-roam-directory "~/nextcloud/org/roam"
-              org-roam-db-update-method 'immediate))
-
 (use-package org-download
   :straight t
   :init (setq org-download-method 'directory
@@ -295,14 +265,9 @@
   :bind (("C-x G" . magit-dispatch)
          ("C-x g" . magit-status)))
 
-(use-package undo-tree
-  :straight t
-  :diminish
-  :config
-  (global-undo-tree-mode 1))
-
 ;; I positively cannot spell :D
 (use-package ispell
+  :defer t
   :config
   (setenv "LANG" "en_US")
   (setq-default ispell-program-name "hunspell")
@@ -312,10 +277,12 @@
 
 (use-package flyspell
   :straight t
+  :defer t
+  :diminish t
   :hook (('text-mode . (lambda () (flyspell-mode 1)))
          ('change-log-mode . (lambda () (flyspell-mode -1)))
          ('log-edit-mode . (lambda () (flyspell-mode -1)))
-         ('prog-mode . 'flyspell-prog-mode)))
+         ('prog-mode . (lambda () (flyspell-mode -1)))))
 
 (use-package comment-tags
   :straight t
@@ -332,10 +299,12 @@
   :straight t
   :bind ("C-=" . er/expand-region))
 
-(use-package vterm
-  :bind ("C-c t" . vterm)
-  :init
-  (setq vterm-kill-buffer-on-exit t))
+(if (not (string= system-type "windows-nt"))
+    (use-package vterm
+      :straight t
+      :bind ("C-c t" . vterm)
+      :init
+      (setq vterm-kill-buffer-on-exit t)))
 
 (use-package geiser
   :straight t
@@ -348,10 +317,12 @@
 
 (use-package nix-mode
   :straight t
+  :defer t
   :mode "\\.nix\\'")
 
 (use-package markdown-mode
   :straight t
+  :defer t
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode)))
@@ -365,13 +336,8 @@
   :straight t
   :diminish t
   :config
-  (editorconfig-mode 1))
-
-(use-package which-key
-  :straight t
-  :diminish
-  :config
-  (which-key-mode))
+  (editorconfig-mode 1)
+  (diminish 'editorconfig-mode))
 
 (use-package nyan-mode
   :straight t
