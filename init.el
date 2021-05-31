@@ -49,6 +49,10 @@
 (fset 'yes-or-no-p 'y-or-n-p)
 (setq confirm-nonexistent-file-or-buffer nil)
 
+(if window-system
+    (progn
+      (straight-use-package 'zenburn-theme)
+      (load-theme 'zenburn t)))
 (set-face-italic 'font-lock-comment-face 1)
 (set-face-italic 'font-lock-comment-delimiter-face nil)
 
@@ -211,10 +215,10 @@
                  ("n" "note" entry
                   (file+headline "~/nextcloud/org/random.org" "Notes")
                   "** %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n")
-                 ("it" "IFW TODO" entry
+                 ("W" "IFW TODO" entry
                   (file+headline "~/Seafile/ORG/ifw.org" "ifw-tasks")
                   "** TODO %?\n%i\n%U")
-                 ("in" "IFW Note" entry
+                 ("w" "IFW Note" entry
                   (file+headline "~/Seafile/ORG/ifw.org" "ifw-notes")
                   "** %?\n%i\n%U\n:PROPERTIES:\n:CREATED: %U\n:END:\n")
                  ("j" "Journal" entry
@@ -224,12 +228,12 @@
                   (file+headline "~/nextcloud/org/bookmarks.org" "bookmarks-inbox")
                   "** TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n[[%x]]\n")))
               ((string= oxa-workplace "work")
-               '(("it" "IFW TODO" entry
+               '(("t" "IFW TODO" entry
                   (file+headline "D:/Seafile/ORG/ifw.org" "ifw-tasks")
                   "** TODO %?\n%i\n%U")
-                 ("in" "IFW Note" entry
+                 ("n" "IFW Note" entry
                   (file+headline "D:/Seafile/ORG/ifw.org" "ifw-notes")
-                  "** %?\n%i\n%U\n:PROPERTIES:\n:CREATED: %U\n:END:\n")))))
+                  "** %?\n%i\n%U\n")))))
   ;; autosave advises for agenda and org-capture
   (advice-add 'org-agenda-quit :before 'org-save-all-org-buffers)
   (advice-add 'org-capture-finalize :after 'org-save-all-org-buffers)
@@ -269,11 +273,9 @@
 (use-package ispell
   :defer t
   :config
-  (setenv "LANG" "en_US")
-  (setq-default ispell-program-name "hunspell")
-  (setq ispell-dictionary "en_US,ru_RU,de_DE")
-  (ispell-set-spellchecker-params)
-  (ispell-hunspell-add-multi-dic "en_US,ru_RU,de_DE"))
+  (setq-default ispell-program-name (if (string= oxa-workplace "work")
+                                        oxa-work-aspell
+                                      "aspell")))
 
 (use-package flyspell
   :straight t
@@ -288,7 +290,8 @@
   :straight t
   :hook (('prog-mode . 'comment-tags-mode)
          ('markdown-mode . 'comment-tags-mode)
-         ('tex-mode . 'comment-tags-mode))
+         ('tex-mode . 'comment-tags-mode)
+         ('latex-mode . 'comment-tags-mode))
   :init
   (setq comment-tags-require-colon 0))
 
@@ -327,10 +330,11 @@
          ("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode)))
 
-(use-package direnv
-  :straight t
-  :config
-  (direnv-mode))
+(if (not (string= system-type "windows-nt"))
+    (use-package direnv
+      :straight t
+      :config
+      (direnv-mode)))
 
 (use-package editorconfig
   :straight t
@@ -343,6 +347,14 @@
   :straight t
   :config
   (nyan-mode 1))
+
+;; python stuff
+(setq python-shell-interpreter "python")
+(setq python-shell-interpreter-args "-m IPython --simple-prompt -i")
+(setq flycheck-python-pycompile-executable "python")
+
+;; fill column
+(setq-default fill-column 80)
 
 ;; throw away all the list-of-custom-shit!
 (setq custom-file "~/.emacs.d/custom.el")
