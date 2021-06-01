@@ -166,8 +166,14 @@
   :defer t
   :mode ("\\.tex\\'" . latex-mode)
   :straight auctex
+  :init
+  (require 'reftex)
+  (add-hook 'LaTeX-mode-hook 'TeX-PDF-mode)
+  (add-hook 'LaTeX-mode-hook 'reftex-mode)
+  (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
   :config
   (setq TeX-parse-self t)
+  (setq reftex-plug-into-AUCTeX t)
   ;; completion for LaTeX
   (use-package company-auctex
     :straight t
