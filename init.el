@@ -186,6 +186,7 @@
   :hook ((emacs-lisp-mode . rainbow-delimiters-mode)
          (lisp-mode . rainbow-delimiters-mode)
          (scheme-mode . rainbow-delimiters-mode)
+         (racket-mode . rainbow-delimiters-mode)
          (cc-mode . rainbow-delimiters-mode)))
 
 (use-package org
@@ -315,10 +316,14 @@
       :init
       (setq vterm-kill-buffer-on-exit t)))
 
-(use-package geiser
+(use-package racket-mode
   :straight t
-  :init
-  (setq geiser-active-implementations '(racket)))
+  :defer t
+  :mode "\\.rkt\\'")
+
+(use-package scheme-mode
+  :defer t
+  :init (setq scheme-program-name "petite"))
 
 (use-package flycheck
   :straight t
