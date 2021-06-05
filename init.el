@@ -186,6 +186,7 @@
   :hook ((emacs-lisp-mode . rainbow-delimiters-mode)
          (lisp-mode . rainbow-delimiters-mode)
          (scheme-mode . rainbow-delimiters-mode)
+         (inferior-scheme-mode . rainbow-delimiters-mode)
          (racket-mode . rainbow-delimiters-mode)
          (cc-mode . rainbow-delimiters-mode)))
 
@@ -367,7 +368,8 @@
 ;; fill column
 (setq-default fill-column 80)
 
-;; throw away all the list-of-custom-shit!
+;; I use custom vars for local config, so let's put them to separate file, where
+;; it's easier for git to ignore it
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
 
