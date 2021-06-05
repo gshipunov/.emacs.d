@@ -43,16 +43,9 @@
 (define-prefix-command 'oxamap)
 (global-set-key (kbd "C-z") 'oxamap)
 
-;; declutter modeline with diminish
-(straight-use-package 'diminish)
-
 (fset 'yes-or-no-p 'y-or-n-p)
 (setq confirm-nonexistent-file-or-buffer nil)
 
-(if window-system
-    (progn
-      (straight-use-package 'zenburn-theme)
-      (load-theme 'zenburn t)))
 (set-face-italic 'font-lock-comment-face 1)
 (set-face-italic 'font-lock-comment-delimiter-face nil)
 
@@ -81,7 +74,7 @@
 (set-face-foreground 'whitespace-tab "#3c3c3c")
 (set-face-background 'whitespace-tab nil)
 (add-hook 'prog-mode-hook #'whitespace-mode)
-(diminish 'whitespace-mode)
+
 
 ;; let's delete a tab as a whole...
 (setq backward-delete-char-untabify-method 'nil)
@@ -130,8 +123,6 @@
 ;; completion by default - welcome to 2020
 (straight-use-package 'company)
 (add-hook 'after-init-hook 'global-company-mode)
-(diminish 'company-mode)
-
 
 (require 'ido)
 (ido-mode t)
@@ -170,7 +161,6 @@
   ;; completion for LaTeX
   (use-package company-auctex
     :straight t
-    :diminish t
     :config
     (company-auctex-init)))
 
@@ -271,17 +261,12 @@
          ("C-x g" . magit-status)))
 
 ;; I positively cannot spell :D
-(use-package ispell
-  :defer t
-  :config
-  (setq-default ispell-program-name (if (string= oxa-workplace "work")
-                                        oxa-work-aspell
-                                      "aspell")))
-
+(setq-default ispell-program-name (if (string= oxa-workplace "work")
+                                      oxa-work-aspell
+                                      "aspell"))
 (use-package flyspell
   :straight t
   :defer t
-  :diminish t
   :hook (('text-mode . (lambda () (flyspell-mode 1)))
          ('change-log-mode . (lambda () (flyspell-mode -1)))
          ('log-edit-mode . (lambda () (flyspell-mode -1)))
@@ -310,46 +295,29 @@
       :init
       (setq vterm-kill-buffer-on-exit t)))
 
-(use-package racket-mode
-  :straight t
-  :defer t
-  :mode "\\.rkt\\'")
-
 (setq scheme-program-name "petite")
 
-(use-package flycheck
-  :straight t
-  :init (global-flycheck-mode))
+;; checking
+(straight-use-package 'flycheck)
+(global-flycheck-mode)
 
-(use-package nix-mode
-  :straight t
-  :defer t
-  :mode "\\.nix\\'")
-
-(use-package markdown-mode
-  :straight t
-  :defer t
-  :mode (("README\\.md\\'" . gfm-mode)
-         ("\\.md\\'" . markdown-mode)
-         ("\\.markdown\\'" . markdown-mode)))
-
-(if (not (string= system-type "windows-nt"))
-    (use-package direnv
-      :straight t
-      :config
-      (direnv-mode)))
-
+;; language support and settings
+(straight-use-package 'nix-mode)
+(straight-use-package 'markdown-mode)
 (straight-use-package 'editorconfig)
-(straight-use-package 'nyan-mode)
-(nyan-mode 1)
+(straight-use-package 'racket-mode)
 
-;; python stuff
+;; python
 (setq python-shell-interpreter "python")
 (setq python-shell-interpreter-args "-m IPython --simple-prompt -i")
 (setq flycheck-python-pycompile-executable "python")
 
+;;; Interface
 ;; fill column
 (setq-default fill-column 80)
+
+(straight-use-package 'nyan-mode)
+(nyan-mode 1)
 
 ;; I use custom vars for local config, so let's put them to separate file, where
 ;; it's easier for git to ignore it
