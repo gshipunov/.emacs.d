@@ -127,35 +127,28 @@
                         (c++-mode . "stroustrup")
                         (other . "linux")))
 
-;; swiper for search
-(straight-use-package 'swiper)
-(global-set-key "\C-s" 'swiper)
-;; ivy for completion
-(straight-use-package 'ivy)
-(ivy-mode 1)
-(diminish 'ivy-mode)
-
-;; ignore substring order, except for swiper
-(setq ivy-re-builders-alist
-      '((swiper . ivy--regex-plus)
-        (t      . ivy--regex-ignore-order)))
-;; do not use caret, quite often we want start typing from the middle
-(eval-after-load 'counsel ;counsel modifies this var
-  (setq ivy-initial-inputs-alist nil))
-
-;; counsel for ivy-powered alternatives
-(straight-use-package 'counsel)
-(counsel-mode 1)
-(diminish 'counsel-mode)
-
 ;; completion by default - welcome to 2020
 (straight-use-package 'company)
 (add-hook 'after-init-hook 'global-company-mode)
 (diminish 'company-mode)
 
-;; healthy people weeks are starting on Monday
-(use-package calendar
-  :init (setq calendar-week-start-day 1))
+
+(require 'ido)
+(ido-mode t)
+(setq ido-enable-flex-matching t)
+(setq ido-everywhere t)
+(setq ido-use-filename-at-point t)
+(setq ido-create-new-buffer 'always)
+(setq ido-file-extensions-order
+      '(".org" ".scm" ".rkt" ".py" ".jl" ".txt" ".tex" ".bib"))
+
+(straight-use-package 'smex)
+(global-set-key (kbd "M-x") 'smex)
+(global-set-key (kbd "M-X") 'smex-major-mode-commands)
+(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+
+(require 'calendar)
+(setq calendar-week-start-day 1)
 
 (use-package ace-window
   :straight t
@@ -322,9 +315,7 @@
   :defer t
   :mode "\\.rkt\\'")
 
-(use-package scheme-mode
-  :defer t
-  :init (setq scheme-program-name "petite"))
+(setq scheme-program-name "petite")
 
 (use-package flycheck
   :straight t
@@ -348,17 +339,9 @@
       :config
       (direnv-mode)))
 
-(use-package editorconfig
-  :straight t
-  :diminish t
-  :config
-  (editorconfig-mode 1)
-  (diminish 'editorconfig-mode))
-
-(use-package nyan-mode
-  :straight t
-  :config
-  (nyan-mode 1))
+(straight-use-package 'editorconfig)
+(straight-use-package 'nyan-mode)
+(nyan-mode 1)
 
 ;; python stuff
 (setq python-shell-interpreter "python")
