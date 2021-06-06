@@ -295,8 +295,6 @@
       :init
       (setq vterm-kill-buffer-on-exit t)))
 
-(setq scheme-program-name "petite")
-
 ;; checking
 (straight-use-package 'flycheck)
 (global-flycheck-mode)
@@ -305,7 +303,15 @@
 (straight-use-package 'nix-mode)
 (straight-use-package 'markdown-mode)
 (straight-use-package 'editorconfig)
+
+;; scheming
 (straight-use-package 'racket-mode)
+(setq scheme-program-name "petite")
+;; make lambda lambda :D
+(add-hook 'scheme-mode-hook 'prettify-symbols-mode)
+(add-hook 'inferior-scheme-mode-hook 'prettify-symbols-mode)
+(add-hook 'racket-mode-hook 'prettify-symbols-mode)
+(add-hook 'emacs-lisp-mode-hook 'prettify-symbols-mode)
 
 ;; python
 (setq python-shell-interpreter "python")
