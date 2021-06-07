@@ -39,6 +39,9 @@
 (setq auto-save-default nil)
 (setq visible-bell t)
 
+;; use ibuffer instead of standard buffer list
+(global-set-key (kbd "C-x C-b") 'ibuffer)
+
 ;; my personal keymap
 (define-prefix-command 'oxamap)
 (global-set-key (kbd "C-z") 'oxamap)
@@ -84,10 +87,8 @@
 (smart-tabs-insinuate 'c 'c++)
 
 (setq-default indent-tabs-mode 'nil)
-;;helper functions to switch tab expansion off when needed
 (defun tabs-yay ()
   "Function to enable tab indentation in buffer."
-  ;;(local-set-key (kbd "TAB") 'tab-to-tab-stop)
   (setq indent-tabs-mode t))
 
 (add-hook 'cc-mode-hook 'tabs-yay)
@@ -101,9 +102,8 @@
 
 ;; mac-emacs spooky path shit
 (when (eq system-type 'darwin)
-  (use-package exec-path-from-shell
-    :straight t
-    :config
+  (progn
+    (straight-use-package 'exec-path-from-shell)
     (exec-path-from-shell-initialize)))
 
 ;; backup management
@@ -114,6 +114,7 @@
       version-control t)
 
 ;; CC mode default styles
+(require 'cc-mode)
 (setq c-default-style '((java-mode . "java")
                         (awk-mode . "awk")
                         (c-mode . "linux")
@@ -281,8 +282,6 @@
   :init
   (setq comment-tags-require-colon 0))
 
-(use-package ibuffer
-  :bind ("C-x C-b" . ibuffer))
 
 (use-package expand-region
   :straight t
