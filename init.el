@@ -6,6 +6,15 @@
 (if (version< emacs-version "26.3")
     (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3"))
 
+(defconst oxa/using-native-comp (and (fboundp 'native-comp-available-p)
+                                    (native-comp-available-p)))
+
+(if oxa/using-native-comp
+    (setq native-comp-deferred-compilation t
+          native-comp-async-query-on-exit t
+          native-comp-async-jobs-number 6
+          native-comp-async-report-warnings-errors nil))
+
 ;; Change some settings based on where we are
 (defvar oxa-workplace "home")
 
@@ -64,6 +73,11 @@
 
 (add-hook 'prog-mode-hook #'my-whitespace-hook)
 (add-hook 'text-mode-hook #'my-whitespace-hook)
+
+(if window-system
+    (progn
+      (straight-use-package 'zenburn-theme)
+      (load-theme 'zenburn t)))
 
 ;; let's try to fix the pile of burning garbage that emacs calls a
 ;; tab. If anyone reading actually knows why mixing tabs and spaces or
@@ -129,7 +143,8 @@
 (ido-mode t)
 (setq ido-enable-flex-matching t)
 (setq ido-everywhere t)
-(setq ido-use-filename-at-point t)
+(setq ido-auto-merge-work-directories-length -1)
+;;(setq ido-use-filename-at-point 't)
 (setq ido-create-new-buffer 'always)
 (setq ido-file-extensions-order
       '(".org" ".scm" ".rkt" ".py" ".jl" ".txt" ".tex" ".bib"))
@@ -175,7 +190,6 @@
          (cc-mode . rainbow-delimiters-mode)))
 
 (use-package org
-  :straight t
   :bind (("C-c a" . org-agenda)
          ("C-c c" . org-capture)
          ("C-c l" . org-store-link)
@@ -289,7 +303,6 @@
 
 (if (not (string= system-type "windows-nt"))
     (use-package vterm
-      :straight t
       :bind ("C-c t" . vterm)
       :init
       (setq vterm-kill-buffer-on-exit t)))
@@ -323,6 +336,28 @@
 
 (straight-use-package 'nyan-mode)
 (nyan-mode 1)
+
+(straight-use-package 'direnv)
+(direnv-mode)
+
+(straight-use-package 'which-key)
+(which-key-mode)
+;; use lsp if we have nativecomp - without it it's too slow :(
+(if oxa/using-native-comp
+    (progn
+      (use-package lsp-mode
+        :straight t
+        :init
+        (setq lsp-keymap-prefix "C-z l")
+        :hook ((c-mode . lsp)
+               (nix-mode . lsp)
+               (python-mode . lsp)
+               (LaTeX-mode . lsp)
+               (TeX-mode . lsp)
+               (lsp-mode . lsp-enable-which-key-integration))
+        :commands lsp)
+      (use-package lsp-ui :straight t :commands lsp-ui-mode)
+      ))
 
 ;; I use custom vars for local config, so let's put them to separate file, where
 ;; it's easier for git to ignore it
