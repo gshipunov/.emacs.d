@@ -6,6 +6,15 @@
 (if (version< emacs-version "26.3")
     (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3"))
 
+(defconst oxa/using-native-comp (and (fboundp 'native-comp-available-p)
+                                    (native-comp-available-p)))
+
+(if oxa/using-native-comp
+    (setq native-comp-deferred-compilation t
+          native-comp-async-query-on-exit t
+          native-comp-async-jobs-number 6
+          native-comp-async-report-warnings-errors nil))
+
 ;; Change some settings based on where we are
 (defvar oxa-workplace "home")
 
@@ -367,6 +376,22 @@
 
 ;; fill column
 (setq-default fill-column 80)
+;; use lsp if we have nativecomp - without it it's too slow :(
+(if oxa/using-native-comp
+    (progn
+      (use-package lsp-mode
+        :straight t
+        :init
+        (setq lsp-keymap-prefix "C-z l")
+        :hook ((c-mode . lsp)
+               (nix-mode . lsp)
+               (python-mode . lsp)
+               (LaTeX-mode . lsp)
+               (TeX-mode . lsp)
+               (lsp-mode . lsp-enable-which-key-integration))
+        :commands lsp)
+      (use-package lsp-ui :straight t :commands lsp-ui-mode)
+      ))
 
 ;; I use custom vars for local config, so let's put them to separate file, where
 ;; it's easier for git to ignore it
