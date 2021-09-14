@@ -48,22 +48,27 @@
 (setq auto-save-default nil)
 (setq visible-bell t)
 
+;; I'm the only cowboy on this mainframe
+(setq create-lockfiles nil)
+
+;; X is dead
+(setq inhibit-x-resources t)
+
+;; use ibuffer instead of standard buffer list
+(global-set-key (kbd "C-x C-b") 'ibuffer)
+
 ;; my personal keymap
 (define-prefix-command 'oxamap)
 (global-set-key (kbd "C-z") 'oxamap)
 
-;; declutter modeline with diminish
-(straight-use-package 'diminish)
-
 (fset 'yes-or-no-p 'y-or-n-p)
 (setq confirm-nonexistent-file-or-buffer nil)
 
-(if window-system
-    (progn
-      (straight-use-package 'zenburn-theme)
-      (load-theme 'zenburn t)))
+;; italicize comments
 (set-face-italic 'font-lock-comment-face 1)
 (set-face-italic 'font-lock-comment-delimiter-face nil)
+;; make the region more visible
+(custom-set-faces '(region ((t (:background "yellow" :foreground "black" :bold t)))) )
 
 (defadvice term-handle-exit
     (after term-kill-buffer-on-exit activate)
@@ -78,6 +83,19 @@
 (add-hook 'prog-mode-hook #'my-whitespace-hook)
 (add-hook 'text-mode-hook #'my-whitespace-hook)
 
+;; (use-package modus-themes
+;;   :straight t
+;;   :init
+;;   (setq modus-themes-slanted-constructs t
+;;         modus-themes-bold-constructs t
+;;         modus-themes-no-mixed-fonts t)
+;;   (modus-themes-load-themes)
+;;   :config
+;;   (modus-themes-load-vivendi)
+;;   ;; dirty hack for emacsclient
+;;   (setq default-frame-alist '((cursor-color . "white")))
+;;   :bind (:map oxamap ("\\" . modus-themes-toggle)))
+
 ;; let's try to fix the pile of burning garbage that emacs calls a
 ;; tab. If anyone reading actually knows why mixing tabs and spaces or
 ;; deleting the tab one space at a time is a good idea, please drop me
@@ -87,10 +105,9 @@
 (setq whitespace-display-mappings
       '((tab-mark 9 [187 9] [92 9])))
 (set-face-inverse-video 'whitespace-tab nil)
-(set-face-foreground 'whitespace-tab "#3c3c3c")
+(set-face-foreground 'whitespace-tab "#4f4f4f")
 (set-face-background 'whitespace-tab nil)
 (add-hook 'prog-mode-hook #'whitespace-mode)
-(diminish 'whitespace-mode)
 
 ;; let's delete a tab as a whole...
 (setq backward-delete-char-untabify-method 'nil)
@@ -100,10 +117,8 @@
 (smart-tabs-insinuate 'c 'c++)
 
 (setq-default indent-tabs-mode 'nil)
-;;helper functions to switch tab expansion off when needed
 (defun tabs-yay ()
   "Function to enable tab indentation in buffer."
-  ;;(local-set-key (kbd "TAB") 'tab-to-tab-stop)
   (setq indent-tabs-mode t))
 
 (add-hook 'cc-mode-hook 'tabs-yay)
@@ -117,9 +132,8 @@
 
 ;; mac-emacs spooky path shit
 (when (eq system-type 'darwin)
-  (use-package exec-path-from-shell
-    :straight t
-    :config
+  (progn
+    (straight-use-package 'exec-path-from-shell)
     (exec-path-from-shell-initialize)))
 
 ;; backup management
@@ -130,41 +144,37 @@
       version-control t)
 
 ;; CC mode default styles
+(require 'cc-mode)
 (setq c-default-style '((java-mode . "java")
                         (awk-mode . "awk")
                         (c-mode . "linux")
                         (c++-mode . "stroustrup")
                         (other . "linux")))
 
-;; swiper for search
-(straight-use-package 'swiper)
-(global-set-key "\C-s" 'swiper)
-;; ivy for completion
-(straight-use-package 'ivy)
-(ivy-mode 1)
-(diminish 'ivy-mode)
-
-;; ignore substring order, except for swiper
-(setq ivy-re-builders-alist
-      '((swiper . ivy--regex-plus)
-        (t      . ivy--regex-ignore-order)))
-;; do not use caret, quite often we want start typing from the middle
-(eval-after-load 'counsel ;counsel modifies this var
-  (setq ivy-initial-inputs-alist nil))
-
-;; counsel for ivy-powered alternatives
-(straight-use-package 'counsel)
-(counsel-mode 1)
-(diminish 'counsel-mode)
-
 ;; completion by default - welcome to 2020
 (straight-use-package 'company)
 (add-hook 'after-init-hook 'global-company-mode)
-(diminish 'company-mode)
 
-;; healthy people weeks are starting on Monday
-(use-package calendar
-  :init (setq calendar-week-start-day 1))
+(require 'ido)
+(ido-mode t)
+(setq ido-enable-flex-matching t)
+(setq ido-everywhere t)
+(setq ido-auto-merge-work-directories-length -1)
+(setq ido-use-filename-at-point 't)
+(setq ido-create-new-buffer 'always)
+(setq ido-file-extensions-order
+      '(".org" ".scm" ".rkt" ".py" ".jl" ".c" ".h" ".txt" ".tex" ".bib"))
+
+(straight-use-package 'smex)
+(global-set-key (kbd "M-x") 'smex)
+(global-set-key (kbd "M-X") 'smex-major-mode-commands)
+(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+
+(straight-use-package 'xclip)
+(xclip-mode 1)
+
+(require 'calendar)
+(setq calendar-week-start-day 1)
 
 (use-package ace-window
   :straight t
@@ -183,10 +193,11 @@
   :config
   (setq TeX-parse-self t)
   (setq reftex-plug-into-AUCTeX t)
+  (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
+        TeX-surce-correlate-start-server t)
   ;; completion for LaTeX
   (use-package company-auctex
     :straight t
-    :diminish t
     :config
     (company-auctex-init)))
 
@@ -200,7 +211,6 @@
          (cc-mode . rainbow-delimiters-mode)))
 
 (use-package org
-  :straight t
   :bind (("C-c a" . org-agenda)
          ("C-c c" . org-capture)
          ("C-c l" . org-store-link)
@@ -208,13 +218,12 @@
          ("C-c 1" . org-time-stamp-inactive))
   :init
   ;; we need indentation
-  (setq ;org-startup-indented t
+  (setq org-startup-indented t
         org-indent-mode-turns-on-hiding-stars nil
         org-hide-leading-stars nil
         org-startup-folded 'content)
   ;; default agenda files
-  (setq org-agenda-files (cond ((string= oxa-workplace "home") '("~/nextcloud/org/"
-                                                                 "~/nextcloud/org/phone/"
+  (setq org-agenda-files (cond ((string= oxa-workplace "home") '("~/org/"
                                                                  "~/Seafile/ORG/"))
                                ((string= oxa-workplace "work") '("D:/Seafile/ORG/"))))
   ;; default agenda view
@@ -224,13 +233,13 @@
   (setq org-capture-templates
         (cond ((string= oxa-workplace "home")
                '(("t" "TODO" entry
-                  (file+headline "~/nextcloud/org/random.org" "Tasks")
+                  (file+headline "~/org/random.org" "Tasks")
                   "** TODO %?\n%i")
                  ("T" "TODO+file" entry
-                  (file+headline "~/nextcloud/org/random.org" "Tasks")
+                  (file+headline "~/org/random.org" "Tasks")
                   "** TODO %?\n%i\n%a")
                  ("n" "note" entry
-                  (file+headline "~/nextcloud/org/random.org" "Notes")
+                  (file+headline "~/org/random.org" "Notes")
                   "** %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n")
                  ("W" "IFW TODO" entry
                   (file+headline "~/Seafile/ORG/ifw.org" "ifw-tasks")
@@ -239,10 +248,10 @@
                   (file+headline "~/Seafile/ORG/ifw.org" "ifw-notes")
                   "** %?\n%i\n%U\n:PROPERTIES:\n:CREATED: %U\n:END:\n")
                  ("j" "Journal" entry
-                  (file+olp+datetree "~/nextcloud/org/log.org.gpg")
+                  (file+olp+datetree "~/org/log.org.gpg")
                   "**** %U %?\n")
                  ("b" "Bookmark" entry
-                  (file+headline "~/nextcloud/org/bookmarks.org" "bookmarks-inbox")
+                  (file+headline "~/org/bookmarks.org" "bookmarks-inbox")
                   "** TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n[[%x]]\n")))
               ((string= oxa-workplace "work")
                '(("t" "IFW TODO" entry
@@ -275,6 +284,25 @@
   ;; abbrev expansion in org-mode
   (require 'org-tempo))
 
+(use-package org-roam
+  :straight t
+  :after org
+  :bind (:map oxamap
+              ("r t" . org-roam-dailies-goto-today)
+              ("r f" . org-roam-node-find)
+              ("r o" . org-roam-node-visit)
+              ("r i" . org-roam-node-insert)
+              ("r c" . org-roam-capture)
+              ("r b" . org-roam-buffer-toggle))
+  :hook ('after-init-hook . 'org-roam-mode)
+  :init
+  (setq org-roam-directory "~/roam"
+        org-roam-v2-ack t
+        org-roam-completion-system 'ido
+        org-roam-completion-everywhere t)
+  :config
+  (org-roam-db-autosync-mode 1))
+
 (use-package org-download
   :straight t
   :init (setq org-download-method 'directory
@@ -287,17 +315,12 @@
          ("C-x g" . magit-status)))
 
 ;; I positively cannot spell :D
-(use-package ispell
-  :defer t
-  :config
-  (setq-default ispell-program-name (if (string= oxa-workplace "work")
-                                        oxa-work-aspell
-                                      "aspell")))
-
+(setq-default ispell-program-name (if (string= oxa-workplace "work")
+                                      oxa-work-aspell
+                                      "hunspell"))
 (use-package flyspell
   :straight t
   :defer t
-  :diminish t
   :hook (('text-mode . (lambda () (flyspell-mode 1)))
          ('change-log-mode . (lambda () (flyspell-mode -1)))
          ('log-edit-mode . (lambda () (flyspell-mode -1)))
@@ -312,8 +335,6 @@
   :init
   (setq comment-tags-require-colon 0))
 
-(use-package ibuffer
-  :bind ("C-x C-b" . ibuffer))
 
 (use-package expand-region
   :straight t
@@ -326,56 +347,48 @@
       :init
       (setq vterm-kill-buffer-on-exit t)))
 
-(use-package racket-mode
-  :straight t
-  :defer t
-  :mode "\\.rkt\\'")
+;; checking
+(straight-use-package 'flycheck)
+(global-flycheck-mode)
 
-(use-package scheme-mode
-  :defer t
-  :init (setq scheme-program-name "petite"))
+;; language support and settings
+(straight-use-package 'nix-mode)
+(straight-use-package 'markdown-mode)
+(straight-use-package 'editorconfig)
 
-(use-package flycheck
-  :straight t
-  :init (global-flycheck-mode))
+;; scheming
+(straight-use-package 'racket-mode)
+(setq scheme-program-name "petite")
+;; make lambda lambda :D
+(add-hook 'scheme-mode-hook 'prettify-symbols-mode)
+(add-hook 'inferior-scheme-mode-hook 'prettify-symbols-mode)
+(add-hook 'racket-mode-hook 'prettify-symbols-mode)
+(add-hook 'emacs-lisp-mode-hook 'prettify-symbols-mode)
 
-(use-package nix-mode
-  :straight t
-  :defer t
-  :mode "\\.nix\\'")
-
-(use-package markdown-mode
-  :straight t
-  :defer t
-  :mode (("README\\.md\\'" . gfm-mode)
-         ("\\.md\\'" . markdown-mode)
-         ("\\.markdown\\'" . markdown-mode)))
-
-(if (not (string= system-type "windows-nt"))
-    (use-package direnv
-      :straight t
-      :config
-      (direnv-mode)))
-
-(use-package editorconfig
-  :straight t
-  :diminish t
-  :config
-  (editorconfig-mode 1)
-  (diminish 'editorconfig-mode))
-
-(use-package nyan-mode
-  :straight t
-  :config
-  (nyan-mode 1))
-
-;; python stuff
+;; python
 (setq python-shell-interpreter "python")
 (setq python-shell-interpreter-args "-m IPython --simple-prompt -i")
 (setq flycheck-python-pycompile-executable "python")
 
+;;; Interface
 ;; fill column
 (setq-default fill-column 80)
+
+(straight-use-package 'nyan-mode)
+(nyan-mode 1)
+
+(straight-use-package 'direnv)
+(direnv-mode)
+
+(straight-use-package 'which-key)
+(which-key-mode)
+
+(straight-use-package 'yasnippet)
+(yas-global-mode 1)
+
+(use-package ess
+  :straight t)
+
 ;; use lsp if we have nativecomp - without it it's too slow :(
 (if oxa/using-native-comp
     (progn
@@ -392,6 +405,9 @@
         :commands lsp)
       (use-package lsp-ui :straight t :commands lsp-ui-mode)
       ))
+
+(when (require 'pdf-tools nil 'noerror)
+  (pdf-loader-install))
 
 ;; I use custom vars for local config, so let's put them to separate file, where
 ;; it's easier for git to ignore it
