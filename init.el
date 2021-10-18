@@ -63,6 +63,13 @@
 (straight-use-package 'nyan-mode)
 (nyan-mode 1)
 
+(straight-use-package 'direnv)
+(direnv-mode)
+
+(straight-use-package 'which-key)
+(which-key-mode)
+(diminish 'which-key-mode)
+
 ;; use ibuffer instead of standard buffer list
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 
@@ -133,6 +140,20 @@
       kept-old-versions 2
       version-control t)
 
+;; completion framework
+(straight-use-package 'ivy)
+(ivy-mode 1)
+(diminish 'ivy-mode)
+(straight-use-package 'counsel)
+(counsel-mode 1)
+(diminish 'counsel-mode)
+(global-set-key (kbd "C-s") 'swiper)
+
+;; autocompletion by default
+(straight-use-package 'company)
+(company-mode 1)
+(diminish 'company-mode)
+
 ;; CC mode default styles
 (require 'cc-mode)
 (setq c-default-style '((java-mode . "java")
@@ -140,28 +161,6 @@
                         (c-mode . "linux")
                         (c++-mode . "stroustrup")
                         (other . "linux")))
-
-;; completion by default - welcome to 2020
-(straight-use-package 'company)
-(add-hook 'after-init-hook 'global-company-mode)
-
-(require 'ido)
-(ido-mode t)
-(setq ido-enable-flex-matching t)
-(setq ido-everywhere t)
-(setq ido-auto-merge-work-directories-length -1)
-(setq ido-use-filename-at-point 't)
-(setq ido-create-new-buffer 'always)
-(setq ido-file-extensions-order
-      '(".org" ".scm" ".rkt" ".py" ".jl" ".c" ".h" ".txt" ".tex" ".bib"))
-
-(straight-use-package 'smex)
-(global-set-key (kbd "M-x") 'smex)
-(global-set-key (kbd "M-X") 'smex-major-mode-commands)
-(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
-
-(straight-use-package 'xclip)
-(xclip-mode 1)
 
 (require 'calendar)
 (setq calendar-week-start-day 1)
@@ -173,7 +172,6 @@
 
 (use-package tex-site
   :defer t
-  :mode ("\\.tex\\'" . latex-mode)
   :straight auctex
   :init
   (require 'reftex)
@@ -208,10 +206,10 @@
          ("C-c 1" . org-time-stamp-inactive))
   :init
   ;; we need indentation
-  (setq org-startup-indented t
+  (setq org-startup-indented nil
         org-indent-mode-turns-on-hiding-stars nil
         org-hide-leading-stars nil
-        org-startup-folded 'content)
+        org-startup-folded 'showeverything)
   ;; default agenda files
   (setq org-agenda-files (cond ((string= oxa-workplace "home") '("~/org/"
                                                                  "~/Seafile/ORG/"))
@@ -222,18 +220,9 @@
   ;; templates
   (setq org-capture-templates
         (cond ((string= oxa-workplace "home")
-               '(("t" "TODO" entry
-                  (file+headline "~/org/random.org" "Tasks")
-                  "** TODO %?\n%i")
-                 ("T" "TODO+file" entry
-                  (file+headline "~/org/random.org" "Tasks")
-                  "** TODO %?\n%i\n%a")
-                 ("n" "note" entry
+               '(("n" "note" entry
                   (file+headline "~/org/random.org" "Notes")
                   "** %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n")
-                 ("W" "IFW TODO" entry
-                  (file+headline "~/Seafile/ORG/ifw.org" "ifw-tasks")
-                  "** TODO %?\n%i\n%U")
                  ("w" "IFW Note" entry
                   (file+headline "~/Seafile/ORG/ifw.org" "ifw-notes")
                   "** %?\n%i\n%U\n:PROPERTIES:\n:CREATED: %U\n:END:\n")
@@ -255,16 +244,7 @@
   (advice-add 'org-capture-finalize :after 'org-save-all-org-buffers)
   (advice-add 'org-capture-refile :after 'org-save-all-org-buffers)
 
-  ;; babel stuff
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((C . t)
-     (dot . t)
-     (emacs-lisp .t)
-     (python . t)
-     (scheme . t)))
   ;; latex preview settings
-  (add-to-list 'org-latex-packages-alist '("" "braket" t)) ; Dirac brakets
   (setq org-preview-latex-image-directory "~/.emacs.d/org-latex-preview/") ; Hide all previews in one place
   ;; org-id - link by UUID
   (require 'org-id)
@@ -288,7 +268,7 @@
   :init
   (setq org-roam-directory "~/roam"
         org-roam-v2-ack t
-        org-roam-completion-system 'ido
+        org-roam-completion-system 'ivy
         org-roam-completion-everywhere t)
   :config
   (org-roam-db-autosync-mode 1))
@@ -323,7 +303,7 @@
 (if (not (string= system-type "windows-nt"))
     (use-package vterm
       :straight t
-      :bind ("C-c t" . vterm)
+      :bind (:map oxamap ("t" . vterm))
       :init
       (setq vterm-kill-buffer-on-exit t)))
 
@@ -335,6 +315,7 @@
 (straight-use-package 'nix-mode)
 (straight-use-package 'markdown-mode)
 (straight-use-package 'editorconfig)
+(straight-use-package 'ess)
 
 ;; scheming
 (straight-use-package 'racket-mode)
@@ -347,27 +328,7 @@
 
 ;; python
 (setq python-shell-interpreter "python")
-(setq python-shell-interpreter-args "-m IPython --simple-prompt -i")
 (setq flycheck-python-pycompile-executable "python")
-
-;;; Interface
-;; fill column
-(setq-default fill-column 80)
-
-(straight-use-package 'nyan-mode)
-(nyan-mode 1)
-
-(straight-use-package 'direnv)
-(direnv-mode)
-
-(straight-use-package 'which-key)
-(which-key-mode)
-
-(straight-use-package 'yasnippet)
-(yas-global-mode 1)
-
-(use-package ess
-  :straight t)
 
 ;; use lsp if we have nativecomp - without it it's too slow :(
 (if oxa/using-native-comp
@@ -383,11 +344,7 @@
                (TeX-mode . lsp)
                (lsp-mode . lsp-enable-which-key-integration))
         :commands lsp)
-      (use-package lsp-ui :straight t :commands lsp-ui-mode)
-      ))
-
-(when (require 'pdf-tools nil 'noerror)
-  (pdf-loader-install))
+      (use-package lsp-ui :straight t :commands lsp-ui-mode)))
 
 ;; I use custom vars for local config, so let's put them to separate file, where
 ;; it's easier for git to ignore it
