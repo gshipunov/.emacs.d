@@ -126,12 +126,6 @@
 ;; follow symlinks to version-controlled files
 (setq vc-follow-symlinks t)
 
-;; mac-emacs spooky path shit
-(when (eq system-type 'darwin)
-  (progn
-    (straight-use-package 'exec-path-from-shell)
-    (exec-path-from-shell-initialize)))
-
 ;; backup management
 (setq backup-directory-alist `(("." . "~/.emacs.d/backups")))
 (setq delete-old-versions t
