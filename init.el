@@ -47,12 +47,16 @@
 (setq inhibit-startup-screen t)
 (setq auto-save-default nil)
 (setq visible-bell t)
+(setq-default fill-column 80)
 
 ;; I'm the only cowboy on this mainframe
 (setq create-lockfiles nil)
 
 ;; X is dead
 (setq inhibit-x-resources t)
+
+(straight-use-package 'nyan-mode)
+(nyan-mode 1)
 
 ;; use ibuffer instead of standard buffer list
 (global-set-key (kbd "C-x C-b") 'ibuffer)
@@ -63,12 +67,6 @@
 
 (fset 'yes-or-no-p 'y-or-n-p)
 (setq confirm-nonexistent-file-or-buffer nil)
-
-;; italicize comments
-(set-face-italic 'font-lock-comment-face 1)
-(set-face-italic 'font-lock-comment-delimiter-face nil)
-;; make the region more visible
-(custom-set-faces '(region ((t (:background "yellow" :foreground "black" :bold t)))) )
 
 (defadvice term-handle-exit
     (after term-kill-buffer-on-exit activate)
@@ -83,18 +81,13 @@
 (add-hook 'prog-mode-hook #'my-whitespace-hook)
 (add-hook 'text-mode-hook #'my-whitespace-hook)
 
-;; (use-package modus-themes
-;;   :straight t
-;;   :init
-;;   (setq modus-themes-slanted-constructs t
-;;         modus-themes-bold-constructs t
-;;         modus-themes-no-mixed-fonts t)
-;;   (modus-themes-load-themes)
-;;   :config
-;;   (modus-themes-load-vivendi)
-;;   ;; dirty hack for emacsclient
-;;   (setq default-frame-alist '((cursor-color . "white")))
-;;   :bind (:map oxamap ("\\" . modus-themes-toggle)))
+(straight-use-package 'color-theme-sanityinc-tomorrow)
+(load-theme 'sanityinc-tomorrow-night t nil)
+(color-theme-sanityinc-tomorrow-night)
+
+;; italicize comments
+(set-face-italic 'font-lock-comment-face 1)
+(set-face-italic 'font-lock-comment-delimiter-face nil)
 
 ;; let's try to fix the pile of burning garbage that emacs calls a
 ;; tab. If anyone reading actually knows why mixing tabs and spaces or
@@ -104,10 +97,8 @@
 (setq whitespace-style '(face tabs tab-mark))
 (setq whitespace-display-mappings
       '((tab-mark 9 [187 9] [92 9])))
-(set-face-inverse-video 'whitespace-tab nil)
-(set-face-foreground 'whitespace-tab "#4f4f4f")
-(set-face-background 'whitespace-tab nil)
 (add-hook 'prog-mode-hook #'whitespace-mode)
+(diminish 'whitespace-mode)
 
 ;; let's delete a tab as a whole...
 (setq backward-delete-char-untabify-method 'nil)
@@ -325,16 +316,6 @@
          ('change-log-mode . (lambda () (flyspell-mode -1)))
          ('log-edit-mode . (lambda () (flyspell-mode -1)))
          ('prog-mode . (lambda () (flyspell-mode -1)))))
-
-(use-package comment-tags
-  :straight t
-  :hook (('prog-mode . 'comment-tags-mode)
-         ('markdown-mode . 'comment-tags-mode)
-         ('tex-mode . 'comment-tags-mode)
-         ('latex-mode . 'comment-tags-mode))
-  :init
-  (setq comment-tags-require-colon 0))
-
 
 (use-package expand-region
   :straight t
