@@ -39,6 +39,11 @@
 ;; Use use-package for sugar, but use straight.el under the hood
 (straight-use-package 'use-package)
 
+;; clean up the modeline
+(straight-use-package 'diminish)
+(require 'diminish)
+(diminish 'auto-revert-mode)
+
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (toggle-scroll-bar -1)
