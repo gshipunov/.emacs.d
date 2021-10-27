@@ -55,7 +55,7 @@
 (setq-default fill-column 80)
 
 ;; I'm the only cowboy on this mainframe
-(setq create-lockfiles nil)
+;; (setq create-lockfiles nil)
 
 ;; X is dead
 (setq inhibit-x-resources t)
@@ -199,6 +199,7 @@
          (cc-mode . rainbow-delimiters-mode)))
 
 (use-package org
+  :straight t
   :bind (("C-c a" . org-agenda)
          ("C-c c" . org-capture)
          ("C-c l" . org-store-link)
@@ -273,11 +274,11 @@
   :config
   (org-roam-db-autosync-mode 1))
 
-(use-package org-download
-  :straight t
-  :init (setq org-download-method 'directory
-              org-download-image-dir "./static/org-download"
-              org-download-heading-lvl 0))
+;; (use-package org-download
+;;   :straight t
+;;   :init (setq org-download-method 'directory
+;;               org-download-image-dir "./static/org-download"
+;;               org-download-heading-lvl 0))
 
 (use-package magit
   :straight t
@@ -315,7 +316,15 @@
 (straight-use-package 'nix-mode)
 (straight-use-package 'markdown-mode)
 (straight-use-package 'editorconfig)
-(straight-use-package 'ess)
+
+;; R stuff
+(use-package ess
+  :straight t
+  :init
+  (setq ess-use-flymake nil))
+
+(use-package poly-R
+  :straight t)
 
 ;; scheming
 (straight-use-package 'racket-mode)
@@ -330,21 +339,18 @@
 (setq python-shell-interpreter "python")
 (setq flycheck-python-pycompile-executable "python")
 
-;; use lsp if we have nativecomp - without it it's too slow :(
-(if oxa/using-native-comp
-    (progn
-      (use-package lsp-mode
-        :straight t
-        :init
-        (setq lsp-keymap-prefix "C-z l")
-        :hook ((c-mode . lsp)
-               (nix-mode . lsp)
-               (python-mode . lsp)
-               (LaTeX-mode . lsp)
-               (TeX-mode . lsp)
-               (lsp-mode . lsp-enable-which-key-integration))
-        :commands lsp)
-      (use-package lsp-ui :straight t :commands lsp-ui-mode)))
+(use-package lsp-mode
+  :straight t
+  :init
+  (setq lsp-keymap-prefix "C-z l")
+  :hook ((c-mode . lsp)
+         (nix-mode . lsp)
+         (python-mode . lsp)
+         (LaTeX-mode . lsp)
+         (TeX-mode . lsp)
+         (lsp-mode . lsp-enable-which-key-integration))
+  :commands lsp)
+(use-package lsp-ui :straight t :commands lsp-ui-mode)
 
 ;; I use custom vars for local config, so let's put them to separate file, where
 ;; it's easier for git to ignore it
