@@ -337,9 +337,15 @@
          (python-mode . lsp)
          (LaTeX-mode . lsp)
          (TeX-mode . lsp)
+         (ess-r-mode . lsp)
          (lsp-mode . lsp-enable-which-key-integration))
   :commands lsp)
 (use-package lsp-ui :straight t :commands lsp-ui-mode)
+
+;; snippets
+(straight-use-package 'yasnippet)
+(yas-global-mode t)
+(diminish 'yas-minor-mode)
 
 ;; I use custom vars for local config, so let's put them to separate file, where
 ;; it's easier for git to ignore it
