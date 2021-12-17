@@ -263,11 +263,11 @@
   :config
   (org-roam-db-autosync-mode 1))
 
-;; (use-package org-download
-;;   :straight t
-;;   :init (setq org-download-method 'directory
-;;               org-download-image-dir "./static/org-download"
-;;               org-download-heading-lvl 0))
+(use-package org-download
+  :straight t
+  :init (setq org-download-method 'directory
+              org-download-image-dir "./static/org-download"
+              org-download-heading-lvl 0))
 
 (use-package magit
   :straight t
