@@ -350,6 +350,12 @@
 (yas-global-mode t)
 (diminish 'yas-minor-mode)
 
+;; projectile
+(use-package projectile
+  :straight t
+  :bind (:map oxamap ("p" . projectile-command-map))
+  :config (projectile-mode 1))
+
 ;; I use custom vars for local config, so let's put them to separate file, where
 ;; it's easier for git to ignore it
 (setq custom-file "~/.emacs.d/custom.el")
