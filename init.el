@@ -290,6 +290,9 @@
   :straight t
   :bind ("C-=" . er/expand-region))
 
+(use-package yaml-mode
+  :straight t)
+
 (if (not (string= system-type "windows-nt"))
     (use-package vterm
       :straight t
