@@ -44,7 +44,7 @@
 (require 'diminish)
 (diminish 'auto-revert-mode)
 
-(menu-bar-mode -1)
+(menu-bar-mode 1)
 (tool-bar-mode -1)
 (toggle-scroll-bar -1)
 (global-display-line-numbers-mode)
@@ -59,6 +59,10 @@
 
 ;; X is dead
 (setq inhibit-x-resources t)
+
+;; use modern pdf-tools
+(straight-use-package 'pdf-tools)
+(pdf-loader-install)
 
 (straight-use-package 'nyan-mode)
 (nyan-mode 1)
@@ -96,21 +100,6 @@
 (straight-use-package 'color-theme-sanityinc-tomorrow)
 (load-theme 'sanityinc-tomorrow-night t nil)
 (color-theme-sanityinc-tomorrow-night)
-
-;; italicize comments
-(set-face-italic 'font-lock-comment-face 1)
-(set-face-italic 'font-lock-comment-delimiter-face nil)
-
-;; let's try to fix the pile of burning garbage that emacs calls a
-;; tab. If anyone reading actually knows why mixing tabs and spaces or
-;; deleting the tab one space at a time is a good idea, please drop me
-;; an email. I want to know.
-(require 'whitespace)
-(setq whitespace-style '(face tabs tab-mark))
-(setq whitespace-display-mappings
-      '((tab-mark 9 [187 9] [92 9])))
-(add-hook 'prog-mode-hook #'whitespace-mode)
-(diminish 'whitespace-mode)
 
 ;; let's delete a tab as a whole...
 (setq backward-delete-char-untabify-method 'nil)
@@ -207,10 +196,10 @@
          ("C-c 1" . org-time-stamp-inactive))
   :init
   ;; we need indentation
-  (setq org-startup-indented nil
+  (setq org-startup-indented t
         org-indent-mode-turns-on-hiding-stars nil
         org-hide-leading-stars nil
-        org-startup-folded 'showeverything)
+        org-startup-folded 'fold)
   ;; default agenda files
   (setq org-agenda-files (cond ((string= oxa-workplace "home") '("~/org/"
                                                                  "~/Seafile/ORG/"))
