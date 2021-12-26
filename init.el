@@ -46,7 +46,8 @@
 
 (menu-bar-mode 1)
 (tool-bar-mode -1)
-(toggle-scroll-bar -1)
+(if (window-system)
+    (toggle-scroll-bar -1))
 (global-display-line-numbers-mode)
 (column-number-mode 1)
 (setq inhibit-startup-screen t)
@@ -61,8 +62,10 @@
 (setq inhibit-x-resources t)
 
 ;; use modern pdf-tools
-(straight-use-package 'pdf-tools)
-(pdf-loader-install)
+(if (window-system)
+    (progn
+      (straight-use-package 'pdf-tools)
+      (pdf-loader-install)))
 
 (straight-use-package 'nyan-mode)
 (nyan-mode 1)
