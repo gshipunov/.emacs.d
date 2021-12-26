@@ -55,6 +55,10 @@
 (setq visible-bell t)
 (setq-default fill-column 80)
 
+;; bigger frames
+(add-to-list 'default-frame-alist '(height . 50))
+(add-to-list 'default-frame-alist '(width . 100))
+
 ;; I'm the only cowboy on this mainframe
 ;; (setq create-lockfiles nil)
 
@@ -70,8 +74,9 @@
 (straight-use-package 'nyan-mode)
 (nyan-mode 1)
 
-(straight-use-package 'direnv)
-(direnv-mode)
+(straight-use-package 'git-gutter)
+(global-git-gutter-mode 1)
+(diminish 'git-gutter-mode)
 
 (straight-use-package 'which-key)
 (which-key-mode)
@@ -139,12 +144,17 @@
 (straight-use-package 'counsel)
 (counsel-mode 1)
 (diminish 'counsel-mode)
-(global-set-key (kbd "C-s") 'swiper)
+(global-set-key (kbd "M-s M-s") 'swiper)
 
 ;; autocompletion by default
 (straight-use-package 'company)
 (company-mode 1)
 (diminish 'company-mode)
+
+;; better tree mode
+(use-package neotree
+  :straight t
+  :bind (:map oxamap ("f" . 'neotree-toggle)))
 
 ;; CC mode default styles
 (require 'cc-mode)
@@ -187,7 +197,7 @@
          (lisp-mode . rainbow-delimiters-mode)
          (scheme-mode . rainbow-delimiters-mode)
          (inferior-scheme-mode . rainbow-delimiters-mode)
-         (racket-mode . rainbow-delimiters-mode)
+         (geiser-mode . rainbow-delimiters-mode)
          (cc-mode . rainbow-delimiters-mode)))
 
 (use-package org
@@ -356,8 +366,8 @@
 ;; projectile
 (use-package projectile
   :straight t
-  :bind (:map oxamap ("p" . projectile-command-map))
-  :config (projectile-mode 1))
+  :commands projectile-command-map
+  :bind (:map oxamap ("p" . projectile-command-map)))
 
 ;; I use custom vars for local config, so let's put them to separate file, where
 ;; it's easier for git to ignore it
