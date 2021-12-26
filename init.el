@@ -313,12 +313,19 @@
   :straight t)
 
 ;; scheming
-(straight-use-package 'racket-mode)
-(setq scheme-program-name "petite")
+;; (use-package racket-mode
+;;   :straight t)
+(use-package geiser-racket
+  :straight t)
+
+(use-package scheme
+  :init (setq scheme-program-name "petite"))
+
+
 ;; make lambda lambda :D
 (add-hook 'scheme-mode-hook 'prettify-symbols-mode)
 (add-hook 'inferior-scheme-mode-hook 'prettify-symbols-mode)
-(add-hook 'racket-mode-hook 'prettify-symbols-mode)
+(add-hook 'geiser-mode-hook 'prettify-symbols-mode)
 (add-hook 'emacs-lisp-mode-hook 'prettify-symbols-mode)
 
 ;; python
