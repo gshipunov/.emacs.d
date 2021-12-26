@@ -336,13 +336,7 @@
   :straight t
   :init
   (setq lsp-keymap-prefix "C-z l")
-  :hook ((c-mode . lsp)
-         (nix-mode . lsp)
-         (python-mode . lsp)
-         (LaTeX-mode . lsp)
-         (TeX-mode . lsp)
-         (ess-r-mode . lsp)
-         (lsp-mode . lsp-enable-which-key-integration))
+  :hook ((lsp-mode . lsp-enable-which-key-integration))
   :commands lsp)
 (use-package lsp-ui :straight t :commands lsp-ui-mode)
 
