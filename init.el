@@ -257,25 +257,6 @@
   ;; abbrev expansion in org-mode
   (require 'org-tempo))
 
-(use-package org-roam
-  :straight t
-  :after org
-  :bind (:map oxamap
-              ("r t" . org-roam-dailies-goto-today)
-              ("r f" . org-roam-node-find)
-              ("r o" . org-roam-node-visit)
-              ("r i" . org-roam-node-insert)
-              ("r c" . org-roam-capture)
-              ("r b" . org-roam-buffer-toggle))
-  :hook ('after-init-hook . 'org-roam-mode)
-  :init
-  (setq org-roam-directory "~/roam"
-        org-roam-v2-ack t
-        org-roam-completion-system 'ivy
-        org-roam-completion-everywhere t)
-  :config
-  (org-roam-db-autosync-mode 1))
-
 (use-package org-download
   :straight t
   :init (setq org-download-method 'directory
