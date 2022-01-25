@@ -74,10 +74,6 @@
 (straight-use-package 'nyan-mode)
 (nyan-mode 1)
 
-(straight-use-package 'git-gutter)
-(global-git-gutter-mode 1)
-(diminish 'git-gutter-mode)
-
 (straight-use-package 'which-key)
 (which-key-mode)
 (diminish 'which-key-mode)
@@ -105,9 +101,17 @@
 (add-hook 'prog-mode-hook #'my-whitespace-hook)
 (add-hook 'text-mode-hook #'my-whitespace-hook)
 
-(straight-use-package 'color-theme-sanityinc-tomorrow)
-(load-theme 'sanityinc-tomorrow-night t nil)
-(color-theme-sanityinc-tomorrow-night)
+(use-package modus-themes
+  :straight t
+  :init
+  (setq modus-themes-italic-constructs t
+        modus-themes-bold-constructs t
+        modus-themes-mixed-fonts nil
+        modus-themes-subtle-line-numbers t)
+  (modus-themes-load-themes)
+  :config
+  (modus-themes-load-operandi)
+  :bind (:map oxamap ("\\" . modus-themes-toggle)))
 
 ;; let's delete a tab as a whole...
 (setq backward-delete-char-untabify-method 'nil)
@@ -121,7 +125,7 @@
   "Function to enable tab indentation in buffer."
   (setq indent-tabs-mode t))
 
-(add-hook 'cc-mode-hook 'tabs-yay)
+(add-hook 'c-mode-hook 'tabs-yay)
 
 ;; highlight the parens
 (setq show-paren-delay 0)
@@ -138,13 +142,31 @@
       version-control t)
 
 ;; completion framework
-(straight-use-package 'ivy)
-(ivy-mode 1)
-(diminish 'ivy-mode)
-(straight-use-package 'counsel)
-(counsel-mode 1)
-(diminish 'counsel-mode)
-(global-set-key (kbd "M-s M-s") 'swiper)
+(use-package ido
+  :init
+  (setq ido-enable-flex-matching t)
+  (setq ido-everywhere t)
+  (setq ido-auto-merge-work-directories-length -1)
+  (setq ido-use-filename-at-point 'guess)
+  (setq ido-create-new-buffer 'always)
+  (setq ido-file-extensions-order
+        '(".org" ".scm" ".rkt" ".py" ".jl" ".txt" ".tex" ".bib"))
+  :config
+  (ido-mode t)
+  (ido-everywhere t))
+
+(use-package smex
+  :straight t
+  :commands (smex
+             emex-major-mode-commands)
+  :bind (("M-x" . smex)
+         ("M-X" . smex-major-mode-commands))
+  :config (smex-initialize))
+
+(use-package ido-completing-read+
+  :straight t
+  :after ido
+  :config (ido-ubiquitous-mode 1))
 
 ;; autocompletion by default
 (straight-use-package 'company)
@@ -162,7 +184,7 @@
                         (awk-mode . "awk")
                         (c-mode . "linux")
                         (c++-mode . "stroustrup")
-                        (other . "linux")))
+                        (other . "stroustrup")))
 
 (require 'calendar)
 (setq calendar-week-start-day 1)
@@ -176,15 +198,23 @@
   :defer t
   :straight auctex
   :init
+  ;; reftex
   (require 'reftex)
+
+  ;; basic config
   (add-hook 'LaTeX-mode-hook 'TeX-PDF-mode)
   (add-hook 'LaTeX-mode-hook 'reftex-mode)
   (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
-  :config
   (setq TeX-parse-self t)
   (setq reftex-plug-into-AUCTeX t)
+
+  ;; preview
   (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
-        TeX-surce-correlate-start-server t)
+        TeX-source-correlate-mode t
+        TeX-source-correlate-start-server t)
+
+  (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)
+
   ;; completion for LaTeX
   (use-package company-auctex
     :straight t
@@ -202,6 +232,8 @@
 
 (use-package org
   :straight t
+  :commands (org-agenda
+             org-capture)
   :bind (("C-c a" . org-agenda)
          ("C-c c" . org-capture)
          ("C-c l" . org-store-link)
@@ -209,10 +241,10 @@
          ("C-c 1" . org-time-stamp-inactive))
   :init
   ;; we need indentation
-  (setq org-startup-indented t
+  (setq org-startup-indented nil
         org-indent-mode-turns-on-hiding-stars nil
         org-hide-leading-stars nil
-        org-startup-folded 'fold)
+        org-startup-folded 'content)
   ;; default agenda files
   (setq org-agenda-files (cond ((string= oxa-workplace "home") '("~/org/"
                                                                  "~/Seafile/ORG/"))
@@ -226,6 +258,9 @@
                '(("n" "note" entry
                   (file+headline "~/org/random.org" "Notes")
                   "** %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n")
+                 ("t" "TODO" entry
+                  (file+headline "~/org/random.org" "Tasks")
+                  "** TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n")
                  ("w" "IFW Note" entry
                   (file+headline "~/Seafile/ORG/ifw.org" "ifw-notes")
                   "** %?\n%i\n%U\n:PROPERTIES:\n:CREATED: %U\n:END:\n")
@@ -234,14 +269,7 @@
                   "**** %U %?\n")
                  ("b" "Bookmark" entry
                   (file+headline "~/org/bookmarks.org" "bookmarks-inbox")
-                  "** TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n[[%x]]\n")))
-              ((string= oxa-workplace "work")
-               '(("t" "IFW TODO" entry
-                  (file+headline "D:/Seafile/ORG/ifw.org" "ifw-tasks")
-                  "** TODO %?\n%i\n%U")
-                 ("n" "IFW Note" entry
-                  (file+headline "D:/Seafile/ORG/ifw.org" "ifw-notes")
-                  "** %?\n%i\n%U\n")))))
+                  "** TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n[[%x]]\n")))))
   ;; autosave advises for agenda and org-capture
   (advice-add 'org-agenda-quit :before 'org-save-all-org-buffers)
   (advice-add 'org-capture-finalize :after 'org-save-all-org-buffers)
@@ -249,11 +277,20 @@
 
   ;; latex preview settings
   (setq org-preview-latex-image-directory "~/.emacs.d/org-latex-preview/") ; Hide all previews in one place
+
+  ;; habits support
+  (require 'org-habit)
+  (add-to-list 'org-modules 'org-habit)
+
+  ;; babel
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((R . t)))
+
   ;; org-id - link by UUID
   (require 'org-id)
   (setq org-id-method 'uuid
         org-id-link-to-org-use-id t)
-  :config
   ;; abbrev expansion in org-mode
   (require 'org-tempo))
 
@@ -265,6 +302,7 @@
 
 (use-package magit
   :straight t
+  :init (setq magit-completing-read-function 'magit-ido-completing-read)
   :bind (("C-x G" . magit-dispatch)
          ("C-x g" . magit-status)))
 
@@ -307,10 +345,20 @@
 (use-package ess
   :straight t
   :init
+  (setq ess-use-ido t)
   (setq ess-use-flymake nil))
 
 (use-package poly-R
   :straight t)
+
+;; Julia
+(use-package julia-mode
+  :straight t)
+
+(use-package julia-snail
+  :straight t
+  :after vterm
+  :hook (julia-mode . julia-snail-mode))
 
 ;; scheming
 ;; (use-package racket-mode
@@ -321,6 +369,10 @@
 (use-package scheme
   :init (setq scheme-program-name "petite"))
 
+(use-package slime
+  :straight t
+  :config
+  (setq inferior-lisp-program "sbcl"))
 
 ;; make lambda lambda :D
 (add-hook 'scheme-mode-hook 'prettify-symbols-mode)
@@ -345,16 +397,13 @@
 (yas-global-mode t)
 (diminish 'yas-minor-mode)
 
-;; projectile
-(use-package projectile
-  :straight t
-  :commands projectile-command-map
-  :bind (:map oxamap ("p" . projectile-command-map)))
-
 ;; I use custom vars for local config, so let's put them to separate file, where
 ;; it's easier for git to ignore it
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
+
+;; start server
+(server-start)
 
 (provide 'init)
 ;;; init.el ends here
