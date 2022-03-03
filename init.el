@@ -156,35 +156,17 @@
       version-control t)
 
 ;; completion framework
-(use-package ido
-  :init
-  (setq ido-enable-flex-matching t)
-  (setq ido-everywhere t)
-  (setq ido-auto-merge-work-directories-length -1)
-  (setq ido-use-filename-at-point 'guess)
-  (setq ido-create-new-buffer 'always)
-  (setq ido-file-extensions-order
-        '(".org" ".scm" ".rkt" ".py" ".jl" ".txt" ".tex" ".bib"))
-  :config
-  (ido-mode t)
-  (ido-everywhere t))
-
-(use-package smex
-  :straight t
-  :commands (smex
-             emex-major-mode-commands)
-  :bind (("M-x" . smex)
-         ("M-X" . smex-major-mode-commands))
-  :config (smex-initialize))
-
-(use-package ido-completing-read+
-  :straight t
-  :after ido
-  :config (ido-ubiquitous-mode 1))
+(straight-use-package 'ivy)
+(ivy-mode 1)
+(diminish 'ivy-mode)
+(straight-use-package 'counsel)
+(counsel-mode 1)
+(diminish 'counsel-mode)
+(global-set-key (kbd "M-s M-s") 'swiper)
 
 ;; autocompletion by default
 (straight-use-package 'company)
-(company-mode 1)
+(global-company-mode 1)
 (diminish 'company-mode)
 
 ;; better tree mode
@@ -316,7 +298,6 @@
 
 (use-package magit
   :straight t
-  :init (setq magit-completing-read-function 'magit-ido-completing-read)
   :bind (("C-x G" . magit-dispatch)
          ("C-x g" . magit-status)))
 
@@ -359,7 +340,7 @@
 (use-package ess
   :straight t
   :init
-  (setq ess-use-ido t)
+  (setq ess-use-company t)
   (setq ess-use-flymake nil))
 
 (use-package poly-R
@@ -383,7 +364,7 @@
 (use-package scheme
   :init (setq scheme-program-name "petite"))
 
-(use-package slime
+(use-package sly
   :straight t
   :config
   (setq inferior-lisp-program "sbcl"))
@@ -404,7 +385,10 @@
   (setq lsp-keymap-prefix "C-z l")
   :hook ((lsp-mode . lsp-enable-which-key-integration))
   :commands lsp)
-(use-package lsp-ui :straight t :commands lsp-ui-mode)
+
+(use-package lsp-ui
+  :straight t
+  :commands lsp-ui-mode)
 
 ;; snippets
 (straight-use-package 'yasnippet)
@@ -415,9 +399,6 @@
 ;; it's easier for git to ignore it
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
-
-;; start server
-(server-start)
 
 (provide 'init)
 ;;; init.el ends here
