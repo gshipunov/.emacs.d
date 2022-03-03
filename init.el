@@ -65,12 +65,6 @@
 ;; X is dead
 (setq inhibit-x-resources t)
 
-;; use modern pdf-tools
-(if (window-system)
-    (progn
-      (straight-use-package 'pdf-tools)
-      (pdf-loader-install)))
-
 (straight-use-package 'nyan-mode)
 (nyan-mode 1)
 
@@ -101,17 +95,37 @@
 (add-hook 'prog-mode-hook #'my-whitespace-hook)
 (add-hook 'text-mode-hook #'my-whitespace-hook)
 
-(use-package modus-themes
-  :straight t
-  :init
-  (setq modus-themes-italic-constructs t
-        modus-themes-bold-constructs t
-        modus-themes-mixed-fonts nil
-        modus-themes-subtle-line-numbers t)
-  (modus-themes-load-themes)
-  :config
-  (modus-themes-load-operandi)
-  :bind (:map oxamap ("\\" . modus-themes-toggle)))
+(defun oxa/graphical-setup ()
+  "Setup bits for non-terminal frames."
+  (if (window-system)
+      (progn
+        (use-package modus-themes
+          :straight t
+          :init
+          (setq modus-themes-italic-constructs t
+                modus-themes-bold-constructs t
+                modus-themes-mixed-fonts nil
+                modus-themes-subtle-line-numbers t)
+          (modus-themes-load-themes)
+          :config
+          (modus-themes-load-operandi)
+          :bind (:map oxamap ("\\" . modus-themes-toggle)))
+
+        ;; use modern pdf-tools
+        (straight-use-package 'pdf-tools)
+        (pdf-loader-install)
+        ;; theme pdf automagically
+        (add-hook 'pdf-tools-enabled-hook 'pdf-view-themed-minor-mode))))
+
+(defun oxa/frame-functions (frame)
+  (with-selected-frame frame
+        (oxa/graphical-setup)))
+
+;; for stand-alone emacs
+(oxa/graphical-setup)
+;; for emacsclient
+(add-hook 'after-make-frame-functions #'oxa/frame-functions)
+
 
 ;; let's delete a tab as a whole...
 (setq backward-delete-char-untabify-method 'nil)
