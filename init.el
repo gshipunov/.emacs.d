@@ -41,23 +41,19 @@
 
 ;; clean up the modeline
 (straight-use-package 'diminish)
-(require 'diminish)
 (diminish 'auto-revert-mode)
 
-(menu-bar-mode 1)
-(tool-bar-mode -1)
-(if (window-system)
-    (toggle-scroll-bar -1))
-(global-display-line-numbers-mode)
+(menu-bar-mode -1)
+(when (display-graphic-p)
+  (toggle-scroll-bar -1)
+  (tool-bar-mode -1))
+(global-display-line-numbers-mode -1)
 (column-number-mode 1)
 (setq inhibit-startup-screen t)
+(setq-default indicate-buffer-boundaries 'left)
 (setq auto-save-default nil)
 (setq visible-bell t)
-(setq-default fill-column 80)
-
-;; bigger frames
-(add-to-list 'default-frame-alist '(height . 50))
-(add-to-list 'default-frame-alist '(width . 100))
+;; (setq-default fill-column 80)
 
 ;; I'm the only cowboy on this mainframe
 ;; (setq create-lockfiles nil)
@@ -105,10 +101,10 @@
           (setq modus-themes-italic-constructs t
                 modus-themes-bold-constructs t
                 modus-themes-mixed-fonts nil
-                modus-themes-subtle-line-numbers t)
+                modus-themes-subtle-line-numbers 'nil)
           (modus-themes-load-themes)
           :config
-          (modus-themes-load-operandi)
+          (modus-themes-load-vivendi)
           :bind (:map oxamap ("\\" . modus-themes-toggle)))
 
         ;; use modern pdf-tools
@@ -356,8 +352,6 @@
   :hook (julia-mode . julia-snail-mode))
 
 ;; scheming
-;; (use-package racket-mode
-;;   :straight t)
 (use-package geiser-racket
   :straight t)
 
@@ -369,18 +363,44 @@
   :config
   (setq inferior-lisp-program "sbcl"))
 
+(use-package paredit
+  :straight t
+  :config
+  (add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
+  (add-hook 'lisp-mode-hook 'enable-paredit-mode)
+  (add-hook 'lisp-interaction-mode-hook 'enable-paredit-mode)
+  (add-hook 'scheme-mode-hook 'enable-paredit-mode)
+  (add-hook 'geiser-mode-hook 'enable-paredit-mode)
+  (add-hook 'ielm-mode-hook 'enable-paredit-mode)
+  (add-hook 'eval-expression-minibuffer-setup-hook 'enable-paredit-mode))
+
 ;; make lambda lambda :D
 (add-hook 'scheme-mode-hook 'prettify-symbols-mode)
 (add-hook 'inferior-scheme-mode-hook 'prettify-symbols-mode)
+(add-hook 'lisp-mode-hook 'prettify-symbols-mode)
 (add-hook 'geiser-mode-hook 'prettify-symbols-mode)
 (add-hook 'emacs-lisp-mode-hook 'prettify-symbols-mode)
 
 ;; python
-(setq python-shell-interpreter "python")
-(setq flycheck-python-pycompile-executable "python")
+(defun oxa/set-system-python ()
+  "Set python interpreter to ipython if it's present."
+  (if (executable-find "ipython")
+      (progn (setq python-shell-interpreter "ipython"
+                   python-shell-interpreter-args "-i --simple-prompt --InteractiveShell.display_page=True")
+             (setq flycheck-python-pycompile-executable "python"))
+    (progn
+      (setq python-shell-interpreter "python")
+      (setq flycheck-python-pycompile-executable "python"))))
+
+(oxa/set-system-python)
+
+;; working with python venvs
+(use-package pyvenv
+  :straight t)
 
 (use-package lsp-mode
   :straight t
+  :bind (:map oxamap ("L" . 'lsp))
   :init
   (setq lsp-keymap-prefix "C-z l")
   :hook ((lsp-mode . lsp-enable-which-key-integration))
@@ -388,15 +408,20 @@
 
 (use-package lsp-ui
   :straight t
+  :after lsp-mode
   :commands lsp-ui-mode)
+
+(use-package lsp-ivy
+  :straight t
+  :commands lsp-ivy-workspace-symbol)
 
 ;; snippets
 (straight-use-package 'yasnippet)
 (yas-global-mode t)
 (diminish 'yas-minor-mode)
 
-;; I use custom vars for local config, so let's put them to separate file, where
-;; it's easier for git to ignore it
+;; I use custom vars for local config, so let's put them to separate
+;; file, where it's easier for git to ignore it
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
 
