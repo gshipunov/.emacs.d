@@ -311,30 +311,28 @@
         org-hide-leading-stars nil
         org-startup-folded 'content)
   ;; default agenda files
-  (setq org-agenda-files (cond ((string= oxa-workplace "home") '("~/org/"
-                                                                 "~/Seafile/ORG/"))
-                               ((string= oxa-workplace "work") '("D:/Seafile/ORG/"))))
+  (setq org-agenda-files '("~/org/" "~/Seafile/ORG/"))
+
   ;; default agenda view
   (setq org-agenda-start-day "-3d"
         org-agenda-span 13)
   ;; templates
   (setq org-capture-templates
-        (cond ((string= oxa-workplace "home")
-               '(("n" "note" entry
-                  (file+headline "~/org/random.org" "Notes")
-                  "** %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n")
-                 ("t" "TODO" entry
-                  (file+headline "~/org/random.org" "Tasks")
-                  "** TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n")
-                 ("w" "IFW Note" entry
-                  (file+headline "~/Seafile/ORG/ifw.org" "ifw-notes")
-                  "** %?\n%i\n%U\n:PROPERTIES:\n:CREATED: %U\n:END:\n")
-                 ("j" "Journal" entry
-                  (file+olp+datetree "~/org/log.org.gpg")
-                  "**** %U %?\n")
-                 ("b" "Bookmark" entry
-                  (file+headline "~/org/bookmarks.org" "bookmarks-inbox")
-                  "** TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n[[%x]]\n")))))
+        '(("n" "note" entry
+           (file+headline "~/org/random.org" "Notes")
+           "** %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n")
+          ("t" "TODO" entry
+           (file+headline "~/org/random.org" "Tasks")
+           "** TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n")
+          ("w" "IFW Note" entry
+           (file+headline "~/Seafile/ORG/ifw.org" "ifw-notes")
+           "** %?\n%i\n%U\n:PROPERTIES:\n:CREATED: %U\n:END:\n")
+          ("j" "Journal" entry
+           (file+olp+datetree "~/org/log.org.gpg")
+           "**** %U %?\n")
+          ("b" "Bookmark" entry
+           (file+headline "~/org/bookmarks.org" "bookmarks-inbox")
+           "** TODO %?\n:PROPERTIES:\n:CREATED: %U\n:END:\n[[%x]]\n")))
   ;; autosave advises for agenda and org-capture
   (advice-add 'org-agenda-quit :before 'org-save-all-org-buffers)
   (advice-add 'org-capture-finalize :after 'org-save-all-org-buffers)
