@@ -1,4 +1,13 @@
 (add-to-list 'load-path "~/.emacs.d/lisp/")
+
+;;; package management
+(require 'package)
+(package-initialize)
+(setq package-native-compile t
+      native-comp-async-report-warnings-errors nil)
+;;; soruces
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+
 ;;; basic bits
 (require 'oxa/sane-defaults)
 (require 'oxa/utils)
@@ -16,14 +25,6 @@
 (setq-default indicate-empty-lines t)
 (setq-default show-trailing-whitespace t)
 (add-hook 'prog-mode-hook '(lambda () (whitespace-mode t)))
-
-;;; package management
-(require 'package)
-(package-initialize)
-(setq package-native-compile t
-      native-comp-async-report-warnings-errors nil)
-;;; soruces
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 
 ;;; personal framework bits
 ;; my personal keymap
