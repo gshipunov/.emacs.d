@@ -1,12 +1,10 @@
 (add-to-list 'load-path "~/.emacs.d/lisp/")
 
-;;; package management
-(require 'package)
-(package-initialize)
-(setq package-native-compile t
-      native-comp-async-report-warnings-errors nil)
-;;; soruces
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+;; supress nativecomp warnings
+(setq native-comp-async-report-warnings-errors 'quiet)
+
+;;; straight for package management
+(require 'oxa/package-mgmt)
 
 ;;; basic bits
 (require 'oxa/sane-defaults)
@@ -17,7 +15,7 @@
 (require 'oxa/latex)
 
 ;;; theme
-(oxa/insure 'gruber-darker-theme)
+(straight-use-package 'gruber-darker-theme)
 (load-theme 'gruber-darker t)
 (set-face-italic 'font-lock-comment-face t)
 (set-face-italic 'font-lock-comment-delimiter-face nil)
@@ -41,12 +39,12 @@
 (add-hook 'c-mode-hook 'tabs-yay)
 
 ;;; expand region
-(oxa/insure 'expand-region)
+(straight-use-package 'expand-region)
 (require 'expand-region)
 (global-set-key (kbd "C-=") 'er/expand-region)
 
 ;;; move text
-(oxa/insure 'move-text)
+(straight-use-package 'move-text)
 (global-set-key (kbd "M-n") 'move-text-down)
 (global-set-key (kbd "M-p") 'move-text-up)
 
@@ -61,23 +59,23 @@
 (ido-ubiquitous-mode 1)
 
 ;; direnv
-(oxa/insure 'direnv)
+(straight-use-package 'direnv)
 (direnv-mode 1)
 
 ;; magit
-(oxa/insure 'magit)
+(straight-use-package 'magit)
 (require 'magit)
 (global-set-key (kbd "C-x g") 'magit-status)
 (global-set-key (kbd "C-x M-g") 'magit-dispatch)
 (global-set-key (kbd "C-c M-g") 'magit-file-dispatch)
 
 ;;; Language support
-(oxa/insure 'nix-mode)
+(straight-use-package 'nix-mode)
 (setq nix-nixfmt-bin "nixpkgs-fmt")
-(oxa/insure 'markdown-mode)
-(oxa/insure 'yaml-mode)
+(straight-use-package 'markdown-mode)
+(straight-use-package 'yaml-mode)
 
-(oxa/insure 'rust-mode)
+(straight-use-package 'rust-mode)
 (require 'rust-mode)
 (oxa/hook rust-mode-hook
           (setq-local fill-column 100))
@@ -90,7 +88,7 @@
                         (other . "stroustrup")))
 
 ;; completion
-(oxa/insure 'company)
+(straight-use-package 'company)
 (global-company-mode)
 
 (custom-set-variables
@@ -99,7 +97,7 @@
     (face tabs spaces trailing space-before-tab newline indentation empty space-after-tab space-mark tab-mark))))
 
 ;; nya-nya-nya-nya-nya-nya
-(oxa/insure 'nyan-mode)
+(straight-use-package 'nyan-mode)
 (require 'nyan-mode)
 (nyan-mode 1)
 

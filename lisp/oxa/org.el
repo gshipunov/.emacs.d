@@ -2,8 +2,9 @@
 (require 'calendar)
 (setq calendar-week-start-day 1)
 
+(straight-use-package 'org)
+(straight-use-package 'org-roam)
 (require 'org)
-(oxa/insure 'org-roam)
 (require 'org-roam)
 
 ;; expose org functions

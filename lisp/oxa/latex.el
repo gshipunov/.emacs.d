@@ -1,4 +1,4 @@
-(oxa/insure 'auctex)
+(straight-use-package 'auctex)
 (require 'tex-site)
 (require 'reftex)
 
