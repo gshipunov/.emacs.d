@@ -19,3 +19,5 @@ racket-mode
 smex-items
 straight
 transient
+history
+tramp
