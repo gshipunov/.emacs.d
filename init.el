@@ -10,6 +10,7 @@
 (require 'oxa/sane-defaults)
 (require 'oxa/utils)
 (require 'oxa/misc)
+(require 'oxa/completion)
 
 (require 'oxa/org)
 (require 'oxa/latex)
@@ -48,15 +49,6 @@
 (global-set-key (kbd "M-n") 'move-text-down)
 (global-set-key (kbd "M-p") 'move-text-up)
 
-;;; ido/smex for completion
-(oxa/insure 'smex)
-(oxa/insure 'ido-completing-read+)
-(require 'ido)
-(require 'ido-completing-read+)
-(setq ido-require-flex-matching t)
-(setq ido-everywhere t)
-(ido-mode 1)
-(ido-ubiquitous-mode 1)
 
 ;; direnv
 (straight-use-package 'direnv)
