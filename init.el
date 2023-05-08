@@ -16,8 +16,10 @@
 (require 'oxa/latex)
 
 ;;; theme
-(straight-use-package 'gruber-darker-theme)
-(load-theme 'gruber-darker t)
+(straight-use-package 'gruvbox-theme)
+(require 'gruvbox)
+(setq gruvbox-bold-constructs t)
+(load-theme 'gruvbox-dark-hard t)
 (set-face-italic 'font-lock-comment-face t)
 (set-face-italic 'font-lock-comment-delimiter-face nil)
 (global-display-line-numbers-mode)
