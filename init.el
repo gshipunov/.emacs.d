@@ -86,7 +86,7 @@
 (custom-set-variables
  '(whitespace-style
    (quote
-    (face tabs spaces trailing space-before-tab newline indentation empty space-after-tab space-mark tab-mark))))
+    (face tabs spaces trailing space-before-tab newline indentation empty space-after-tab tab-mark))))
 
 ;; nya-nya-nya-nya-nya-nya
 (straight-use-package 'nyan-mode)
