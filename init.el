@@ -1,7 +1,7 @@
 (add-to-list 'load-path "~/.emacs.d/lisp/")
 
 ;; supress nativecomp warnings
-(setq native-comp-async-report-warnings-errors 'quiet)
+(setq native-comp-async-report-warnings-errors 'silent)
 
 ;;; straight for package management
 (require 'oxa/package-mgmt)
