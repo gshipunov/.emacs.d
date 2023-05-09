@@ -25,7 +25,7 @@
 (global-display-line-numbers-mode)
 (setq-default indicate-empty-lines t)
 (setq-default show-trailing-whitespace t)
-(add-hook 'prog-mode-hook '(lambda () (whitespace-mode t)))
+(add-hook 'prog-mode-hook #'(lambda () (whitespace-mode t)))
 
 ;;; personal framework bits
 ;; my personal keymap

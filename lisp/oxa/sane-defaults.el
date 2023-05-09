@@ -10,9 +10,9 @@
 
 ;; TODO Proper graphical setup
 (add-hook 'after-make-frame-functions
-          (lambda (frame)
-            (toggle-scroll-bar -1)
-            (tool-bar-mode -1)))
+          #'(lambda (frame)
+              (toggle-scroll-bar -1)
+              (tool-bar-mode -1)))
 
 ;;; improvements to compilation buffer
 (require 'compile)
