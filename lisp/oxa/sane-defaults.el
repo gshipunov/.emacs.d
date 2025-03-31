@@ -50,7 +50,9 @@
       version-control t)
 
 ;; default frame size
-(add-to-list 'default-frame-alist '(height . 50))
+(add-to-list 'default-frame-alist '(height . 53))
 (add-to-list 'default-frame-alist '(width . 107))
+
+(pixel-scroll-precision-mode t)
 
 (provide 'oxa/sane-defaults)

@@ -16,16 +16,47 @@
 (require 'oxa/latex)
 
 ;;; theme
-(straight-use-package 'gruvbox-theme)
-(require 'gruvbox)
-(setq gruvbox-bold-constructs t)
-(load-theme 'gruvbox-dark-hard t)
-(set-face-italic 'font-lock-comment-face t)
-(set-face-italic 'font-lock-comment-delimiter-face nil)
+(setq modus-themes-italic-constructs t
+      modus-themes-bold-constructs t)
+
+(load-theme 'modus-operandi)
 (global-display-line-numbers-mode)
 (setq-default indicate-empty-lines t)
 (setq-default show-trailing-whitespace t)
 (add-hook 'prog-mode-hook #'(lambda () (whitespace-mode t)))
+
+;; match system theme
+;; https://freerangebits.com/posts/2025/02/emacs-light-dark/
+(defvar oxa:dark-theme 'modus-vivendi)
+(defvar oxa:light-theme 'modus-operandi)
+(defun oxa:theme-from-dbus (value)
+  (load-theme (if (= 1 (car (flatten-list value)))
+                  oxa:dark-theme
+                oxa:light-theme)
+              t))
+
+(require 'dbus)
+
+;; Set the current theme based on what the system theme is right now:
+(dbus-call-method-asynchronously
+   :session "org.freedesktop.portal.Desktop"
+   "/org/freedesktop/portal/desktop"
+   "org.freedesktop.portal.Settings"
+   "Read"
+   #'oxa:theme-from-dbus
+   "org.freedesktop.appearance"
+   "color-scheme")
+
+;; Register to be notified when the system theme changes:
+(dbus-register-signal
+   :session "org.freedesktop.portal.Desktop"
+   "/org/freedesktop/portal/desktop"
+   "org.freedesktop.portal.Settings"
+   "SettingChanged"
+   (lambda (path var value)
+     (when (and (string-equal path "org.freedesktop.appearance")
+                (string-equal var "color-scheme"))
+       (oxa:theme-from-dbus value))))
 
 ;;; personal framework bits
 ;; my personal keymap
